@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -7,6 +7,9 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import './Checkout.css';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -31,18 +34,22 @@ function getSteps() {
 function getStepContent(step) {
     switch (step) {
         case 0:
-            return `For each ad campaign that you create, you can control how much
-              you're willing to spend on clicks and conversions, which networks
-              and geographical locations you want your ads to show on, and more.`;
+            return (<div>
+                <Tabs className="tabs" >
+                    <Tab label="EXISTING ADDRESS" />
+                    <Tab label="NEW ADDRESS" />
+                </Tabs>
+            </div>);
         case 1:
             return 'An ad group contains one or more ads which target a shared set of keywords.';
-        
+            
         default:
             return 'Unknown step';
     }
 }
 
-export default function Checkout() {
+//export default function Checkout() {
+const VerticalStepper= ()=> {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
@@ -59,6 +66,8 @@ export default function Checkout() {
         setActiveStep(0);
     };
 
+    
+    
     return (
         <div className={classes.root}>
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -92,12 +101,47 @@ export default function Checkout() {
             </Stepper>
             {activeStep === steps.length && (
                 <Paper square elevation={0} className={classes.resetContainer}>
-                    <Typography>All steps completed - you&apos;re finished</Typography>
+                    <Typography><b> View the summary & place your order now!</b></Typography>
                     <Button onClick={handleReset} className={classes.button}>
-                        Reset
+                        CHANGE
           </Button>
                 </Paper>
             )}
         </div>
     );
 }
+
+class Checkout extends Component {
+    constructor() {
+        super();
+        this.state = {
+            modalIsOpen: false,
+            value: 0,
+            usernameRequired: "dispNone",
+            username: "",
+            loginPasswordRequired: "dispNone",
+            loginPassword: "",
+            firstnameRequired: "dispNone",
+            firstname: "",
+            lastnameRequired: "dispNone",
+            lastname: "",
+            emailRequired: "dispNone",
+            email: "",
+            registerPasswordRequired: "dispNone",
+            registerPassword: "",
+            contactRequired: "dispNone",
+            contact: "",
+            registrationSuccess: false,
+            loggedIn: sessionStorage.getItem("access-token") == null ? false : true
+        }
+    }
+    tabChangeHandler = (event, value) => {
+        this.setState({ value });
+    }
+
+    render() {
+        return (<VerticalStepper/>);
+    }  ;
+}
+
+export default Checkout;
