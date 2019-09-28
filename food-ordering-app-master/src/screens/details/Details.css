@@ -1,0 +1,41 @@
+.restaurant-details-section {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    background: lightgray;
+}
+
+.left-details {
+    width: 30%;
+    text-align: left;
+    padding: 20px;
+}
+
+.right-details{
+    width: 60%;
+    text-align: left;
+    padding: 20px;
+}
+  
+.details {
+    text-align: left;
+}
+
+.item-details {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    background: lightgray;
+}
+
+.item-details-left {
+    width: 40%;
+    text-align: left;
+    padding: 20px;
+}
+
+.item-details-left {
+    width: 40%;
+    text-align: left;
+    padding: 20px;
+}
