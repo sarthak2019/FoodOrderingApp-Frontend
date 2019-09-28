@@ -25,17 +25,16 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    background: lightgray;
 }
 
-.item-details-left {
-    width: 40%;
+.items-left-details {
+    width: 47%;
     text-align: left;
     padding: 20px;
 }
 
-.item-details-left {
-    width: 40%;
+.items-right-details {
+    width: 47%;
     text-align: left;
     padding: 20px;
 }
