@@ -11,6 +11,12 @@ import './Checkout.css';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { constants } from '../../common/utils';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+//import StarBorderIcon from '@material-ui/icons/StarBorder';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -32,6 +38,7 @@ function getSteps() {
     return ['Delivery', 'Payment'];
 }
 
+
 function getStepContent(step) {
     switch (step) {
         case 0:
@@ -42,10 +49,10 @@ function getStepContent(step) {
                 </Tabs>
             </div>);
         case 1:
-            
+
             let that = this;
-            let url = `${constants.paymentMethodUrl}/?access_token=${sessionStorage.getItem('access-token')}`;
-            return fetch(url, {
+            let url = `${constants.paymentMethodUrl}`;
+            fetch(url, {
                 method: 'GET',
             }).then((response) => {
                 console.log(response.json());
@@ -58,16 +65,23 @@ function getStepContent(step) {
                 console.log('error user data', error);
             });
             return (
-
+               
                 <div>
-                <Typography> Select Mode of Payment</Typography>
-
+                    <FormControl>
+                        <FormLabel>Select Mode of Payment</FormLabel>
+                    
+                    <RadioGroup id="paymentMethods" name="customized-radios">
+                            <Radio id="cod" name="cash" value="COD" checked={false}> COD </Radio>
+                        </RadioGroup>
+                    </FormControl>
             </div>);
             
         default:
             return 'Unknown step';
     }
 }
+
+
 
 //export default function Checkout() {
 const VerticalStepper= ()=> {
@@ -87,8 +101,54 @@ const VerticalStepper= ()=> {
         setActiveStep(0);
     };
 
-    
-    
+    /*
+    return (
+        <div className={classes.root}>
+            <Stepper activeStep={activeStep} orientation="vertical">
+                    <Step >
+                        <StepLabel>Delivery</StepLabel>
+                        <StepContent>
+                        <Typography>
+                            <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
+                            <Tab label="EXISTING ADDRESS" />
+                            <Tab label="NEW ADDRESS" />
+                            </Tabs>
+                        </Typography>
+                            <div className={classes.actionsContainer}>
+                                <div>
+                                    <Button
+                                        disabled={activeStep === 0}
+                                        onClick={handleBack}
+                                        className={classes.button}
+                                    >
+                                        Back
+                  </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleNext}
+                                        className={classes.button}
+                                    >
+                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                    </Button>
+                                </div>
+                            </div>
+                        </StepContent>
+                    </Step>
+             
+            </Stepper>
+            {activeStep === steps.length && (
+                <Paper square elevation={0} className={classes.resetContainer}>
+                    <Typography><b> View the summary & place your order now!</b></Typography>
+                    <Button onClick={handleReset} className={classes.button}>
+                        CHANGE
+          </Button>
+                </Paper>
+            )}
+        </div>
+    );
+    */
+
     return (
         <div className={classes.root}>
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -130,6 +190,8 @@ const VerticalStepper= ()=> {
             )}
         </div>
     );
+     
+
 }
 
 class Checkout extends Component {
