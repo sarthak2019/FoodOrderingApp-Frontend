@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import './Checkout.css';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { constants } from '../../common/utils';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -41,7 +42,27 @@ function getStepContent(step) {
                 </Tabs>
             </div>);
         case 1:
-            return 'An ad group contains one or more ads which target a shared set of keywords.';
+            
+            let that = this;
+            let url = `${constants.paymentMethodUrl}/?access_token=${sessionStorage.getItem('access-token')}`;
+            return fetch(url, {
+                method: 'GET',
+            }).then((response) => {
+                console.log(response.json());
+                return response.json();
+            }).then((jsonResponse) => {
+                that.setState({
+                    paymentMethods: jsonResponse.data
+                });
+            }).catch((error) => {
+                console.log('error user data', error);
+            });
+            return (
+
+                <div>
+                <Typography> Select Mode of Payment</Typography>
+
+            </div>);
             
         default:
             return 'Unknown step';
@@ -132,6 +153,7 @@ class Checkout extends Component {
             contactRequired: "dispNone",
             contact: "",
             registrationSuccess: false,
+            paymentMethods: {},
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
     }
