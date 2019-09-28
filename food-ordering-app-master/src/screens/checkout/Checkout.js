@@ -15,6 +15,9 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputLabel from '@material-ui/core/InputLabel';
+import { StepButton } from '@material-ui/core';
 //import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 
@@ -34,9 +37,28 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const classes = useStyles;
+const activeStep = 0;
+const setActiveStep = 0;
+const steps = 0;
+//const steps = getSteps();
+
+const handleNext = () => {
+    //setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep = activeStep+ 1;
+};
+
+const handleBack = () => {
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
+};
+
+const handleReset = () => {
+    setActiveStep(0);
+};
+/*
 function getSteps() {
     return ['Delivery', 'Payment'];
-}
+} 
 
 
 function getStepContent(step) {
@@ -149,6 +171,7 @@ const VerticalStepper= ()=> {
     );
     */
 
+/*
     return (
         <div className={classes.root}>
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -193,8 +216,10 @@ const VerticalStepper= ()=> {
      
 
 }
+*/
 
 class Checkout extends Component {
+
     constructor() {
         super();
         this.state = {
@@ -219,12 +244,96 @@ class Checkout extends Component {
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
     }
+
+    componentDidMount() {
+        this.getPaymentMethods();
+        
+    }
     tabChangeHandler = (event, value) => {
         this.setState({ value });
     }
 
+    getPaymentMethods = () => {
+        console.log("In get");
+        let that = this;
+        let url = `${constants.paymentMethodUrl}`;
+        return fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+            console.log(response.json());
+            return response.json();
+        }).then((jsonResponse) => {
+            that.setState({
+                paymentMethods: jsonResponse.data
+            });
+        }).catch((error) => {
+            console.log('error user data', error);
+        });
+    }
+
     render() {
-        return (<VerticalStepper/>);
+        //return (<VerticalStepper/>);
+        return (
+            <Stepper orientation="vertical">
+                <Step>
+                    <StepLabel>Delivery</StepLabel>
+                    <StepContent>
+                        <Typography>
+                            <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
+                                <Tab label="EXISTING ADDRESS" />
+                                <Tab label="NEW ADDRESS" />
+                            </Tabs>
+                        </Typography>
+                        <FormControl>
+                            <FormLabel>Select Mode of Payment</FormLabel>
+
+                            <RadioGroup row>
+                                <FormControlLabel value="COD" control={<Radio name="cash" value="COD" />} label="Female" />
+                                {/*<Radio id="cod" name="cash" value="COD" checked={false}>COD</Radio>*/}
+
+                            </RadioGroup>
+                        </FormControl>
+                        <div className={classes.actionsContainer}>
+                            <div>
+                                <Button
+                                    disabled={activeStep === 0}
+                                    onClick={handleBack}
+                                    className={classes.button}
+                                >
+                                    Back
+                  </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleNext}
+                                    className={classes.button}
+                                >
+                                    {activeStep === steps - 1 ? 'Finish' : 'Next'}
+                                </Button>
+                            </div>
+                        </div>{/*
+                        <div className={classes.actionsContainer}>
+                            <StepButton children="Payment" className={classes.button}>NEXT</StepButton>
+                            <StepButton children="Back" className={classes.button}>BACK</StepButton>
+                        </div>*/}
+                    </StepContent>
+                    
+                </Step>
+                <Step>
+                    <StepLabel>Payment</StepLabel>
+                    <StepContent>
+                        <FormControl>
+                            <FormLabel>Select Mode of Payment</FormLabel>
+
+                            <RadioGroup id="paymentMethods" name="customized-radios">
+                                <Radio id="cod" name="cash" value="COD" checked={false}> COD </Radio>
+                            </RadioGroup>
+                        </FormControl>
+                    </StepContent>
+                </Step>
+            </Stepper>
+            
+            );
     }  ;
 }
 
