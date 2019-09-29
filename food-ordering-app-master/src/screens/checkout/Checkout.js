@@ -263,12 +263,12 @@ class Checkout extends Component {
             method: 'GET',
         }).then((response) => {
             
-           // console.log("In then"+response.json().toString());
+           console.log("In then"+JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
             //console.log("In then2" + jsonResponse);
             that.setState({
-                paymentMethods: jsonResponse
+                paymentMethods: jsonResponse.paymentMethods
             });
             console.log("val"+this.state.paymentMethods);
         }).catch((error) => {
@@ -292,16 +292,16 @@ class Checkout extends Component {
                         <FormControl>
                             <FormLabel>Select Mode of Payment</FormLabel>
 
-                            <RadioGroup row>
+                            <RadioGroup column>
                                 
-                                {/*<FormControlLabel value="COD" control={<Radio name="cash" value="COD" />} label="Female" />
-                                 * <Radio id="cod" name="cash" value="COD" checked={false}>COD</Radio>*/}
+                                <FormControlLabel value="COD" control={<Radio name="cash" value="COD" />} label="Female" />
+                                {/* <Radio id="cod" name="cash" value="COD" checked={false}>COD</Radio>*/}
                                 {
                                     this.state.paymentMethods.map(method => (
-                                    <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name }>
-                                        
-                                    </FormControlLabel>
-                                ))}
+                                        <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name}/>
+                                        )
+                                    )
+                                }
 
                             </RadioGroup>
                         </FormControl>
