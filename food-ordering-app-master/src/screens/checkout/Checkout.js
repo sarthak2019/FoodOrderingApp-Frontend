@@ -240,32 +240,37 @@ class Checkout extends Component {
             contactRequired: "dispNone",
             contact: "",
             registrationSuccess: false,
-            paymentMethods: {},
+            paymentMethods: [],
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
+        this.getPaymentMethods();
     }
-
+    /*
     componentDidMount() {
         this.getPaymentMethods();
         
-    }
+    }*/
     tabChangeHandler = (event, value) => {
         this.setState({ value });
     }
 
     getPaymentMethods = () => {
-        console.log("In get");
+        
         let that = this;
         let url = `${constants.paymentMethodUrl}`;
+        console.log("In get" + url);
         return fetch(url, {
             method: 'GET',
         }).then((response) => {
-            console.log(response.json());
+            
+           console.log("In then"+JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
+            //console.log("In then2" + jsonResponse);
             that.setState({
-                paymentMethods: jsonResponse.data
+                paymentMethods: jsonResponse.paymentMethods
             });
+            console.log("val"+this.state.paymentMethods);
         }).catch((error) => {
             console.log('error user data', error);
         });
@@ -287,10 +292,13 @@ class Checkout extends Component {
                         <FormControl>
                             <FormLabel>Select Mode of Payment</FormLabel>
 
-                            <RadioGroup row>
-                                <FormControlLabel value="COD" control={<Radio name="cash" value="COD" />} label="Female" />
-                                {/*<Radio id="cod" name="cash" value="COD" checked={false}>COD</Radio>*/}
-
+                            <RadioGroup column>
+                                {
+                                    this.state.paymentMethods.map(method => (
+                                        <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name}/>
+                                        )
+                                    )
+                                }
                             </RadioGroup>
                         </FormControl>
                         <div className={classes.actionsContainer}>
