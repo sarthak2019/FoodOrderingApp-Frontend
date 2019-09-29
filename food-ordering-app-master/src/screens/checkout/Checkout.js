@@ -355,7 +355,7 @@ class Checkout extends Component {
                             <FormControl required>
                                 <InputLabel htmlFor="stateList">State</InputLabel>
                                 <Select
-                                        value={this.state.statesList}
+                                        value={this.state.statesList} 
                                         onChange={this.statesChangeHandler}
                                     >
                                     {this.state.statesList.map(st => (
@@ -364,8 +364,11 @@ class Checkout extends Component {
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                   
-                                </FormControl>
+                                <FormHelperText className={this.state.stateListRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
+                            </FormControl>
+    
                                 <br />
                                 <FormControl required>
                                 <InputLabel htmlFor="Pincode">Pincode</InputLabel>
