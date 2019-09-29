@@ -293,16 +293,12 @@ class Checkout extends Component {
                             <FormLabel>Select Mode of Payment</FormLabel>
 
                             <RadioGroup column>
-                                
-                                <FormControlLabel value="COD" control={<Radio name="cash" value="COD" />} label="Female" />
-                                {/* <Radio id="cod" name="cash" value="COD" checked={false}>COD</Radio>*/}
                                 {
                                     this.state.paymentMethods.map(method => (
                                         <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name}/>
                                         )
                                     )
                                 }
-
                             </RadioGroup>
                         </FormControl>
                         <div className={classes.actionsContainer}>
