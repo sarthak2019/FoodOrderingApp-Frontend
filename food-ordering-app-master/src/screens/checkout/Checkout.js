@@ -313,6 +313,21 @@ class Checkout extends Component {
         });
     }
 
+    saveAddressClickHandler = () => {
+        this.state.flatNo === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
+        this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
+        this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
+        this.state.statesList === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
+        this.state.pincode === 0 ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
+
+        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.statesList === "") || (this.state.pincode === 0)) { return; }
+
+        this.props.history.push({
+            pathname: '/confirm/' + this.props.match.params.id,
+            bookingSummary: this.state
+        })
+    }
+
     render() {
         //return (<VerticalStepper/>);
         return (
