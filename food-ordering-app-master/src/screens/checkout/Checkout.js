@@ -254,9 +254,10 @@ class Checkout extends Component {
     }
 
     getPaymentMethods = () => {
-        console.log("In get");
+        
         let that = this;
         let url = `${constants.paymentMethodUrl}`;
+        console.log("In get" + url);
         return fetch(url, {
             method: 'GET',
         }).then((response) => {
@@ -264,7 +265,7 @@ class Checkout extends Component {
             return response.json();
         }).then((jsonResponse) => {
             that.setState({
-                paymentMethods: jsonResponse.data
+                paymentMethods: jsonResponse
             });
         }).catch((error) => {
             console.log('error user data', error);
