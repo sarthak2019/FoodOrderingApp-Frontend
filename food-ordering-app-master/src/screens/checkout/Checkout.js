@@ -17,8 +17,13 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { StepButton } from '@material-ui/core';
-//import StarBorderIcon from '@material-ui/icons/StarBorder';
+import PropTypes from 'prop-types';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -55,6 +60,18 @@ const handleBack = () => {
 const handleReset = () => {
     setActiveStep(0);
 };
+const TabContainer = function (props) {
+    return (
+        <Typography component="div" style={{ padding: 0, textAlign: 'left' }}>
+            {props.children}
+        </Typography>
+    )
+}
+
+TabContainer.propTypes = {
+    children: PropTypes.node.isRequired
+}
+
 /*
 function getSteps() {
     return ['Delivery', 'Payment'];
@@ -225,21 +242,19 @@ class Checkout extends Component {
         this.state = {
             modalIsOpen: false,
             value: 0,
-            usernameRequired: "dispNone",
-            username: "",
-            loginPasswordRequired: "dispNone",
-            loginPassword: "",
-            firstnameRequired: "dispNone",
-            firstname: "",
-            lastnameRequired: "dispNone",
-            lastname: "",
-            emailRequired: "dispNone",
-            email: "",
+            flatNoRequired: "dispNone",
+            flatNo: "",
+            states_listRequired: "dispNone",
+            states_list: [],
+            localityRequired: "dispNone",
+            locality: "",
+            cityRequired: "dispNone",
+            city: "",
             registerPasswordRequired: "dispNone",
             registerPassword: "",
             contactRequired: "dispNone",
             contact: "",
-            registrationSuccess: false,
+            saveAddress: false,
             paymentMethods: [],
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
@@ -289,18 +304,61 @@ class Checkout extends Component {
                                 <Tab label="NEW ADDRESS" />
                             </Tabs>
                         </Typography>
-                        <FormControl>
-                            <FormLabel>Select Mode of Payment</FormLabel>
-
-                            <RadioGroup column>
-                                {
-                                    this.state.paymentMethods.map(method => (
-                                        <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name}/>
-                                        )
-                                    )
+                        {this.state.value === 1 &&
+                            <TabContainer>
+                                <FormControl required>
+                                <Input id="flatNo" type="text" placeholder="Flat/Building No." flatNo={this.state.flatNo} onChange={this.inputFlatNoChangeHandler} />
+                                    <FormHelperText className={this.state.flatNoRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br />
+                                <FormControl required>
+                                <Input id="locality" type="text" placeholder="Locality" locality={this.state.locality} onChange={this.inputLocalityChangeHandler} />
+                                <FormHelperText className={this.state.localityRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br />
+                                <FormControl required>
+                                <Input id="city" type="text" placeholder="City" city={this.state.city} onChange={this.inputCityChangeHandler} />
+                                <FormHelperText className={this.state.cityRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                    </FormControl>
+                                <br /><br />
+                                <FormControl required>
+                                {/*<Select
+                                        value={this.state.states_list}
+                                        onChange={this.statesChangeHandler}
+                                    >
+                                    {states_list.map(st => (
+                                            <MenuItem key={"state" + st.id} value={st.state}>
+                                                {st.state}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    */}
+                                </FormControl>
+                                <br /><br />
+                                <FormControl required>
+                                <Input id="pincode" type="text" placeholder="Pincode" pincode={this.state.pincode} onChange={this.inputPincodeChangeHandler} />
+                                <FormHelperText className={this.state.pincodeRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br /> 
+                                {this.state.saveAddress === true &&
+                                    <FormControl>
+                                        <span className="successText">
+                                            Registration Successful. Please Login!
+                                      </span>
+                                    </FormControl>
                                 }
-                            </RadioGroup>
-                        </FormControl>
+                                <br /><br />
+                                <Button variant="contained" color="primary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
+                        </TabContainer>
+                        }
                         <div className={classes.actionsContainer}>
                             <div>
                                 <Button
@@ -332,9 +390,13 @@ class Checkout extends Component {
                     <StepContent>
                         <FormControl>
                             <FormLabel>Select Mode of Payment</FormLabel>
-
-                            <RadioGroup id="paymentMethods" name="customized-radios">
-                                <Radio id="cod" name="cash" value="COD" checked={false}> COD </Radio>
+                            <RadioGroup column>
+                                {
+                                    this.state.paymentMethods.map(method => (
+                                        <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name} />
+                                    )
+                                    )
+                                }
                             </RadioGroup>
                         </FormControl>
                     </StepContent>
