@@ -240,15 +240,16 @@ class Checkout extends Component {
             contactRequired: "dispNone",
             contact: "",
             registrationSuccess: false,
-            paymentMethods: null,
+            paymentMethods: [],
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
+        this.getPaymentMethods();
     }
-
+    /*
     componentDidMount() {
         this.getPaymentMethods();
         
-    }
+    }*/
     tabChangeHandler = (event, value) => {
         this.setState({ value });
     }
@@ -269,7 +270,7 @@ class Checkout extends Component {
             that.setState({
                 paymentMethods: jsonResponse
             });
-            console.log(this.state.paymentMethods);
+            console.log("val"+this.state.paymentMethods);
         }).catch((error) => {
             console.log('error user data', error);
         });
@@ -292,8 +293,15 @@ class Checkout extends Component {
                             <FormLabel>Select Mode of Payment</FormLabel>
 
                             <RadioGroup row>
-                                <FormControlLabel value="COD" control={<Radio name="cash" value="COD" />} label="Female" />
-                                {/*<Radio id="cod" name="cash" value="COD" checked={false}>COD</Radio>*/}
+                                
+                                {/*<FormControlLabel value="COD" control={<Radio name="cash" value="COD" />} label="Female" />
+                                 * <Radio id="cod" name="cash" value="COD" checked={false}>COD</Radio>*/}
+                                {
+                                    this.state.paymentMethods.map(method => (
+                                    <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name }>
+                                        
+                                    </FormControlLabel>
+                                ))}
 
                             </RadioGroup>
                         </FormControl>
