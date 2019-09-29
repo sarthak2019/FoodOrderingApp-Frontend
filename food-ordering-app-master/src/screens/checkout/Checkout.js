@@ -246,6 +246,7 @@ class Checkout extends Component {
             flatNo: "",
             statesListRequired: "dispNone",
             statesList: [],
+            state_uuid: "",
             localityRequired: "dispNone",
             locality: "",
             cityRequired: "dispNone",
@@ -266,6 +267,10 @@ class Checkout extends Component {
     }*/
     tabChangeHandler = (event, value) => {
         this.setState({ value });
+    }
+
+    statesChangeHandler = event => {
+        this.setState({ state_uuid: event.target.value });
     }
 
     getPaymentMethods = () => {
@@ -316,9 +321,9 @@ class Checkout extends Component {
         this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
         this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
         this.state.statesList === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
-        this.state.pincode === 0 ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
+        this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
 
-        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.statesList === "") || (this.state.pincode === 0)) { return; }
+        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { return; }
 
         this.props.history.push({
             pathname: '/confirm/' + this.props.match.params.id,
@@ -327,21 +332,24 @@ class Checkout extends Component {
 
         let that = this;
         let url = `${constants.addressUrl}`;
-        console.log("In state get" + url);
+        console.log("In SaveAddress post" + url);
         return fetch(url, {
-            method: 'GET',
-        }).then((response) => {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.state)
+        })/*.then(response => {
 
             console.log("In state then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
-            //console.log("In then2" + jsonResponse);
-            that.setState({
-                statesList: jsonResponse.states
-            });
-            console.log("val" + this.state.statesList);
-        }).catch((error) => {
-            console.log('error fetching States List', error);
+            console.log("In then2" + response);
+            
+            //console.log("val" + this.state.statesList);
+        })*/.catch((error) => {
+            console.log('error saving Address', error);
         });
     }
 
