@@ -240,7 +240,7 @@ class Checkout extends Component {
             contactRequired: "dispNone",
             contact: "",
             registrationSuccess: false,
-            paymentMethods: {},
+            paymentMethods: null,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
     }
@@ -261,12 +261,15 @@ class Checkout extends Component {
         return fetch(url, {
             method: 'GET',
         }).then((response) => {
-            console.log(response.json());
+            
+           // console.log("In then"+response.json().toString());
             return response.json();
         }).then((jsonResponse) => {
+            //console.log("In then2" + jsonResponse);
             that.setState({
                 paymentMethods: jsonResponse
             });
+            console.log(this.state.paymentMethods);
         }).catch((error) => {
             console.log('error user data', error);
         });
