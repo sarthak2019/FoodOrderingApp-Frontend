@@ -1,0 +1,17 @@
+.app-header {
+    background-color: darkgrey;
+    height: 36px;
+    padding: 8px 32px 8px 16px;
+    display: flex;
+}
+
+.Input.clicked {
+    color: white;
+}
+
+@media (max-width: 800px) {
+    .app-header {
+      flex-direction: column;
+      height: 122px;
+    }
+  }
