@@ -10,6 +10,10 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Badge from '@material-ui/core/Badge';
 import RemoveIcon from '@material-ui/icons/Remove';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
     margin: {
@@ -55,7 +59,10 @@ class Details extends Component {
             restaurant_average_price: null,
             item_count: 0,
             state_items_list: [],
-            found: false
+            found: false,
+            open: false,
+            message: "",
+            total: 0
         }
         this.getData();
     }
@@ -85,7 +92,7 @@ class Details extends Component {
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x20b9;{this.state.restaurant_number_customers_rated}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&#x20b9;</b>{this.state.restaurant_number_customers_rated}</span>
                         <div>
                             <span>AVERGAE RATING BY {this.state.restaurant_number_customers_rated} CUSTOMERS</span>
 
@@ -150,6 +157,13 @@ class Details extends Component {
                                             <span style={{ align: 'left', width: "33%" }}>{it.price}</span>
                                         </div>
                                     ))}
+                                </div>,
+                                <div className="item-details">
+                                    <span style={{ align: 'left', width: "50%" }}><b>TOTAL AMOUNT</b></span>
+                                    <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp;&nbsp;{this.state.total}</b></span>
+                                </div>,
+                                <div className="item-details">
+                                    <Button style={{ width: "100%" }}variant="contained" onClick={() => this.onItemCheckoutClicked()} color="primary">CHECKOUT</Button>
                                 </div>
 
                             </CardContent>
@@ -157,48 +171,103 @@ class Details extends Component {
                     </div>
 
                 </div>
+                <Snackbar open={this.state.open} message={this.state.message} style={{ alignItems: 'left' }}
+                    action={[<IconButton
+                        key="close"
+                        aria-label="close"
+                        color="inherit"
+                        onClick={() => this.handleClose()}
+                    >
+                        <CloseIcon />
+                    </IconButton>,
+                    ]}>
+
+                </Snackbar>
 
             </div>
         )
     }
 
     onAddClicked = (newItem) => {
+        // console.log(newItem.item_name)
+        // let newItemList = [];
+        // let found = false
+        // console.log(newItemList)
+        // console.log(this.state.state_items_list.length)
+        // newItemList = this.state.state_items_list
+        // if ((newItemList.length > 0 && this.state.found === true)) {
+        //     console.log("inside if")
+        //     for (let item of newItemList) {
+        //         if (item.name === newItem.item_name) {
+        //             console.log("inside 2nd if")
+        //             item.count = item.count + 1
+        //             item.price = item.price + newItem.price
+        //             this.setState({ found: true })
+        //             let itemNode = item
+        //             newItemList.pop(item)
+        //             newItemList.push(itemNode)
+        //             this.state.item_count = this.state.item_count + 1
+        //             console.log(itemNode)
+        //             console.log(newItemList)
+        //             this.setState({open: true})
+        //             this.setState({message: "Item added to cart!"})
+        //             return
+        //         }
+        //     }
+        //     this.setState({ found: false })
+        // }
+        // this.setState({ found: true })
+        // console.log("inside 1st else")
+        // let itemNode = {};
+        // itemNode.name = newItem.item_name
+        // itemNode.count = 1
+        // itemNode.price = newItem.price
+        // this.state.item_count = this.state.item_count + 1
+        // newItemList.push(itemNode)
+        // this.setState({open: true})
+        // this.setState({message: "Item added to cart!"})
+        // this.setState({ state_items_list: newItemList });
+        // console.log(this.state.state_items_list);
         console.log(newItem.item_name)
-        let newItemList = [];
-        let found = false
-        console.log(newItemList)
-        console.log(this.state.state_items_list.length)
-        newItemList = this.state.state_items_list
-        if ((newItemList.length > 0 && this.state.found === true)) {
-            console.log("inside if")
-            for (let item of newItemList) {
-                if (item.name === newItem.item_name) {
-                    console.log("inside 2nd if")
-                    item.count = item.count + 1
-                    item.price = item.price + newItem.price
-                    this.setState({ found: true })
-                    let itemNode = item
-                    newItemList.pop(item)
-                    newItemList.push(itemNode)
-                    this.state.item_count = this.state.item_count + 1
-                    console.log(itemNode)
-                    console.log(newItemList)
-                    return
+        let newItemList = this.state.state_items_list
+        let itemIndex = 0;
+        if (newItemList.length > 0) {
+            newItemList.forEach(function (subscriber, index) {
+                if (subscriber.name === newItem.item_name) {
+                    itemIndex = index;
                 }
-            }
-            this.setState({ found: false })
+            }, this);
         }
-        this.setState({ found: true })
-        console.log("inside 1st else")
-        let itemNode = {};
-        itemNode.name = newItem.item_name
-        itemNode.count = 1
-        itemNode.price = newItem.price
+        // }
+        let itemNode = newItemList[itemIndex];
+        console.log(itemNode)
+        let newItems = newItemList;
+        let itemNodeNew = {}
+        //newItems.splice(itemIndex, 1);
+        if (itemNode !== undefined) {
+            if (itemNode.name === newItem.item_name) {
+                itemNodeNew.price = itemNode.price + newItem.price
+                itemNodeNew.count = itemNode.count + 1
+                itemNodeNew.name = itemNode.name
+                newItems.splice(itemIndex, 1, itemNodeNew);
+                this.state.item_count = this.state.item_count + 1
+                this.state.total = this.state.total + newItem.price
+                this.setState({open: true})
+                this.setState({message: "Item added to cart!"})
+                this.setState({ state_items_list: newItems });
+                return
+            }
+        }
+        console.log("else block")
+        itemNodeNew.price = newItem.price
+        itemNodeNew.name = newItem.item_name
+        itemNodeNew.count = 1
+        this.state.total = this.state.total + newItem.price
+        newItems.push(itemNodeNew)
         this.state.item_count = this.state.item_count + 1
-        newItemList.push(itemNode)
-
-        this.setState({ state_items_list: newItemList });
-        console.log(this.state.state_items_list);
+        this.setState({ state_items_list: newItems });
+        this.setState({open: true})
+        this.setState({message: "Item added to cart!"})
     }
 
     onItemAddClicked = (newItem) => {
@@ -211,11 +280,15 @@ class Details extends Component {
         }, this);
         let newItems = newItemList;
         //newItems.splice(itemIndex, 1);
-        newItem.price = newItem.price + (newItem.price / newItem.count)
+        let cost = newItem.price / newItem.count
+        newItem.price = newItem.price + cost
         newItem.count = newItem.count + 1
+        this.state.total = this.state.total + cost
         newItems.splice(itemIndex, 1, newItem);
         this.state.item_count = this.state.item_count + 1
         this.setState({ state_items_list: newItemList });
+        this.setState({open: true})
+        this.setState({message: "Item quantity increased by 1!"})
     }
 
     onItemRemoveClicked = (newItem) => {
@@ -227,16 +300,30 @@ class Details extends Component {
             }
         }, this);
         let newItems = newItemList;
-        newItem.price = newItem.price - (newItem.price / newItem.count)
+        let cost = newItem.price / newItem.count
+        newItem.price = newItem.price - cost
         newItem.count = newItem.count - 1
-        if(newItem.count !==0){
+        this.state.total = this.state.total - cost
+        if (newItem.count !== 0) {
             newItems.splice(itemIndex, 1, newItem);
         }
-        else{
+        else {
             newItems.splice(itemIndex, 1);
         }
         this.state.item_count = this.state.item_count - 1
         this.setState({ state_items_list: newItemList });
+        this.setState({open: true})
+        this.setState({message: "Item removed from cart!"})
+        
+    }
+
+    handleClose = () => {
+
+        this.setState({ open: false })
+    };
+
+    onItemCheckoutClicked = () => {
+
     }
 
 
