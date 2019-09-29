@@ -244,8 +244,8 @@ class Checkout extends Component {
             value: 0,
             flatNoRequired: "dispNone",
             flatNo: "",
-            states_listRequired: "dispNone",
-            states_list: [],
+            statesListRequired: "dispNone",
+            statesList: [],
             localityRequired: "dispNone",
             locality: "",
             cityRequired: "dispNone",
@@ -259,6 +259,7 @@ class Checkout extends Component {
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
         this.getPaymentMethods();
+        this.getStatesList();
     }
     /*
     componentDidMount() {
@@ -287,7 +288,28 @@ class Checkout extends Component {
             });
             console.log("val"+this.state.paymentMethods);
         }).catch((error) => {
-            console.log('error user data', error);
+            console.log('error fetching paymentMethods', error);
+        });
+    }
+
+    getStatesList = () => {
+        let that = this;
+        let url = `${constants.statesUrl}`;
+        console.log("In state get" + url);
+        return fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+
+            console.log("In state then" + JSON.stringify(response));
+            return response.json();
+        }).then((jsonResponse) => {
+            //console.log("In then2" + jsonResponse);
+            that.setState({
+                statesList: jsonResponse.states
+            });
+            console.log("val" + this.state.statesList);
+        }).catch((error) => {
+            console.log('error fetching States List', error);
         });
     }
 
@@ -306,48 +328,53 @@ class Checkout extends Component {
                         </Typography>
                         {this.state.value === 1 &&
                             <TabContainer>
-                                <FormControl required>
-                                <Input id="flatNo" type="text" placeholder="Flat/Building No." flatNo={this.state.flatNo} onChange={this.inputFlatNoChangeHandler} />
+                            <FormControl required>
+                                <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
+                                <Input id="flatNo" type="text" flatNo={this.state.flatNo} onChange={this.inputFlatNoChangeHandler} />
                                     <FormHelperText className={this.state.flatNoRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
                                 </FormControl>
-                                <br /><br />
-                                <FormControl required>
-                                <Input id="locality" type="text" placeholder="Locality" locality={this.state.locality} onChange={this.inputLocalityChangeHandler} />
+                                <br />
+                            <FormControl required>
+                                <InputLabel htmlFor="Locality">Locality</InputLabel>
+                                <Input id="locality" type="text" locality={this.state.locality} onChange={this.inputLocalityChangeHandler} />
                                 <FormHelperText className={this.state.localityRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
                                 </FormControl>
-                                <br /><br />
-                                <FormControl required>
-                                <Input id="city" type="text" placeholder="City" city={this.state.city} onChange={this.inputCityChangeHandler} />
+                                <br />
+                            <FormControl required>
+                                <InputLabel htmlFor="City">City</InputLabel>
+                                <Input id="city" type="text" city={this.state.city} onChange={this.inputCityChangeHandler} />
                                 <FormHelperText className={this.state.cityRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
                                     </FormControl>
-                                <br /><br />
-                                <FormControl required>
-                                {/*<Select
-                                        value={this.state.states_list}
+                                <br /> 
+                            <FormControl required>
+                                <InputLabel htmlFor="stateList">State</InputLabel>
+                                <Select
+                                        value={this.state.statesList}
                                         onChange={this.statesChangeHandler}
                                     >
-                                    {states_list.map(st => (
-                                            <MenuItem key={"state" + st.id} value={st.state}>
-                                                {st.state}
+                                    {this.state.statesList.map(st => (
+                                            <MenuItem key={"state" + st.id} value={st.state_name}>
+                                                {st.state_name}
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                    */}
+                                   
                                 </FormControl>
-                                <br /><br />
+                                <br />
                                 <FormControl required>
-                                <Input id="pincode" type="text" placeholder="Pincode" pincode={this.state.pincode} onChange={this.inputPincodeChangeHandler} />
+                                <InputLabel htmlFor="Pincode">Pincode</InputLabel>
+                                <Input id="pincode" type="text" pincode={this.state.pincode} onChange={this.inputPincodeChangeHandler} />
                                 <FormHelperText className={this.state.pincodeRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
                                 </FormControl>
-                                <br /><br /> 
+                                <br />
                                 {this.state.saveAddress === true &&
                                     <FormControl>
                                         <span className="successText">
@@ -355,7 +382,7 @@ class Checkout extends Component {
                                       </span>
                                     </FormControl>
                                 }
-                                <br /><br />
+                                <br />
                                 <Button variant="contained" color="primary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
                         </TabContainer>
                         }
