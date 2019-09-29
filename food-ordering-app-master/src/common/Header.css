@@ -14,4 +14,13 @@
       flex-direction: column;
       height: 122px;
     }
-  }
+    .card-details {
+        flex-direction: column;
+    }
+}
+
+.card-details {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
