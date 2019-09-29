@@ -250,10 +250,8 @@ class Checkout extends Component {
             locality: "",
             cityRequired: "dispNone",
             city: "",
-            registerPasswordRequired: "dispNone",
-            registerPassword: "",
-            contactRequired: "dispNone",
-            contact: "",
+            pincodeRequired: "dispNone",
+            pincode: "",
             saveAddress: false,
             paymentMethods: [],
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
@@ -325,7 +323,26 @@ class Checkout extends Component {
         this.props.history.push({
             pathname: '/confirm/' + this.props.match.params.id,
             bookingSummary: this.state
-        })
+        });
+
+        let that = this;
+        let url = `${constants.addressUrl}`;
+        console.log("In state get" + url);
+        return fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+
+            console.log("In state then" + JSON.stringify(response));
+            return response.json();
+        }).then((jsonResponse) => {
+            //console.log("In then2" + jsonResponse);
+            that.setState({
+                statesList: jsonResponse.states
+            });
+            console.log("val" + this.state.statesList);
+        }).catch((error) => {
+            console.log('error fetching States List', error);
+        });
     }
 
     render() {
@@ -374,7 +391,7 @@ class Checkout extends Component {
                                         onChange={this.statesChangeHandler}
                                     >
                                     {this.state.statesList.map(st => (
-                                            <MenuItem key={"state" + st.id} value={st.state_name}>
+                                            <MenuItem key={"state" + st.id} value={st.id}>
                                                 {st.state_name}
                                             </MenuItem>
                                         ))}
