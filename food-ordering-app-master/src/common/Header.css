@@ -1,5 +1,5 @@
 .app-header {
-    background-color: darkgrey;
+    background-color: rgb(67, 71, 68);
     height: 36px;
     padding: 8px 32px 8px 16px;
     display: flex;
@@ -23,4 +23,20 @@
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
+}
+
+.tabs {
+    margin-bottom: 20px;
+}
+
+.red {
+    color: red;
+} 
+
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
 }
