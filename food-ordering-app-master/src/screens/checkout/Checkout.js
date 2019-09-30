@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -21,6 +21,9 @@ import Input from '@material-ui/core/Input';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 import { StepButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
@@ -50,7 +53,7 @@ const steps = 0;
 
 const handleNext = () => {
     //setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setActiveStep = activeStep+ 1;
+    setActiveStep = activeStep + 1;
 };
 
 const handleBack = () => {
@@ -255,8 +258,11 @@ class Checkout extends Component {
             pincode: "",
             saveAddress: false,
             paymentMethods: [],
+            addressList: [],
+            message: null,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
+        this.getExistingAddress();
         this.getPaymentMethods();
         this.getStatesList();
     }
@@ -274,22 +280,22 @@ class Checkout extends Component {
     }
 
     getPaymentMethods = () => {
-        
+
         let that = this;
         let url = `${constants.paymentMethodUrl}`;
         console.log("In get" + url);
         return fetch(url, {
             method: 'GET',
         }).then((response) => {
-            
-           console.log("In then"+JSON.stringify(response));
+
+            console.log("In then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
             //console.log("In then2" + jsonResponse);
             that.setState({
                 paymentMethods: jsonResponse.paymentMethods
             });
-            console.log("val"+this.state.paymentMethods);
+            console.log("val" + this.state.paymentMethods);
         }).catch((error) => {
             console.log('error fetching paymentMethods', error);
         });
@@ -316,6 +322,33 @@ class Checkout extends Component {
         });
     }
 
+    getExistingAddress = () => {
+        let that = this;
+        let url = `${constants.addressUrl}`;
+        console.log("In Address get" + url);
+        return fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+
+            console.log("In address then" + JSON.stringify(response));
+            return response.json();
+        }).then((jsonResponse) => {
+            //console.log("In then2" + jsonResponse);
+            if (jsonResponse.addresses === null) {
+                this.setState({ message: "There are no saved addresses! You can save an address using the 'New Address' tab or using your 'Profile' menu option." })
+            }
+            if (jsonResponse.restaurants !== null) {
+                this.setState({ message: null })
+            }
+            that.setState({
+                addressList: jsonResponse.addresses
+            });
+            console.log("val" + this.state.addressList);
+        }).catch((error) => {
+            console.log('error fetching addressList', error);
+        });
+    }
+
     saveAddressClickHandler = () => {
         this.state.flatNo === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
         this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
@@ -330,17 +363,40 @@ class Checkout extends Component {
             bookingSummary: this.state
         });
 
-        let that = this;
-        let url = `${constants.addressUrl}`;
         console.log("In SaveAddress post" + url);
-        return fetch(url, {
+        let saveAddressData = null;
+        let xhrSaveAddress = new XMLHttpRequest();
+        let that = this;
+        xhrSaveAddress.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+                sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
+                that.setState({
+                    saveAddress: true,
+                });
+
+            }
+        });
+
+        
+        let url = `${constants.addressUrl}`;
+        xhrSaveAddress.open("POST", url);
+        saveAddressData.
+        xhrSaveAddress.setRequestHeader("authorization", "Basic " + window.btoa(this.state.username + ":" + this.state.loginPassword));
+        xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
+        xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
+        
+        xhrSaveAddress.send(saveAddressData);
+
+
+        /*return fetch(url, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(this.state)
-        })/*.then(response => {
+        })then(response => {
 
             console.log("In state then" + JSON.stringify(response));
             return response.json();
@@ -348,11 +404,12 @@ class Checkout extends Component {
             console.log("In then2" + response);
             
             //console.log("val" + this.state.statesList);
-        })*/.catch((error) => {
+        }).catch((error) => {
             console.log('error saving Address', error);
-        });
+        });*/
     }
 
+    
     render() {
         //return (<VerticalStepper/>);
         return (
@@ -366,54 +423,74 @@ class Checkout extends Component {
                                 <Tab label="NEW ADDRESS" />
                             </Tabs>
                         </Typography>
+                        {this.state.value === 0 &&
+                            <TabContainer>
+                            <GridList cellHeight={160} cols={2} >
+                                {this.state.addressList != null && this.state.addressList.map(address => (
+                                        <GridListTile
+                                            className="gridTile"
+                                        key={address.id}>
+                                        {address.flatNo}<br />
+                                        {address.locality}<br />
+                                        {address.city}<br />
+                                        {address.state}<br />
+                                        {address.pincode}
+                                            
+                                        </GridListTile>
+                                    ))}
+                            </GridList>
+                            <div>{this.state.message}</div>
+                            </TabContainer>
+                        }
+
                         {this.state.value === 1 &&
                             <TabContainer>
-                            <FormControl required>
-                                <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
-                                <Input id="flatNo" type="text" flatNo={this.state.flatNo} onChange={this.inputFlatNoChangeHandler} />
+                                <FormControl required>
+                                    <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
+                                    <Input id="flatNo" type="text" flatNo={this.state.flatNo} onChange={this.inputFlatNoChangeHandler} />
                                     <FormHelperText className={this.state.flatNoRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
                                 </FormControl>
                                 <br />
-                            <FormControl required>
-                                <InputLabel htmlFor="Locality">Locality</InputLabel>
-                                <Input id="locality" type="text" locality={this.state.locality} onChange={this.inputLocalityChangeHandler} />
-                                <FormHelperText className={this.state.localityRequired}>
+                                <FormControl required>
+                                    <InputLabel htmlFor="Locality">Locality</InputLabel>
+                                    <Input id="locality" type="text" locality={this.state.locality} onChange={this.inputLocalityChangeHandler} />
+                                    <FormHelperText className={this.state.localityRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
                                 </FormControl>
                                 <br />
-                            <FormControl required>
-                                <InputLabel htmlFor="City">City</InputLabel>
-                                <Input id="city" type="text" city={this.state.city} onChange={this.inputCityChangeHandler} />
-                                <FormHelperText className={this.state.cityRequired}>
+                                <FormControl required>
+                                    <InputLabel htmlFor="City">City</InputLabel>
+                                    <Input id="city" type="text" city={this.state.city} onChange={this.inputCityChangeHandler} />
+                                    <FormHelperText className={this.state.cityRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
-                                    </FormControl>
-                                <br /> 
-                            <FormControl required>
-                                <InputLabel htmlFor="stateList">State</InputLabel>
-                                <Select
-                                        value={this.state.statesList} 
+                                </FormControl>
+                                <br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="stateList">State</InputLabel>
+                                    <Select
+                                        value={this.state.statesList}
                                         onChange={this.statesChangeHandler}
                                     >
-                                    {this.state.statesList.map(st => (
+                                        {this.state.statesList.map(st => (
                                             <MenuItem key={"state" + st.id} value={st.id}>
                                                 {st.state_name}
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                <FormHelperText className={this.state.stateListRequired}>
-                                    <span className="red">required</span>
-                                </FormHelperText>
-                            </FormControl>
-    
+                                    <FormHelperText className={this.state.stateListRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+
                                 <br />
                                 <FormControl required>
-                                <InputLabel htmlFor="Pincode">Pincode</InputLabel>
-                                <Input id="pincode" type="text" pincode={this.state.pincode} onChange={this.inputPincodeChangeHandler} />
-                                <FormHelperText className={this.state.pincodeRequired}>
+                                    <InputLabel htmlFor="Pincode">Pincode</InputLabel>
+                                    <Input id="pincode" type="text" pincode={this.state.pincode} onChange={this.inputPincodeChangeHandler} />
+                                    <FormHelperText className={this.state.pincodeRequired}>
                                         <span className="red">required</span>
                                     </FormHelperText>
                                 </FormControl>
@@ -427,7 +504,7 @@ class Checkout extends Component {
                                 }
                                 <br />
                                 <Button variant="contained" color="primary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
-                        </TabContainer>
+                            </TabContainer>
                         }
                         <div className={classes.actionsContainer}>
                             <div>
@@ -453,7 +530,7 @@ class Checkout extends Component {
                             <StepButton children="Back" className={classes.button}>BACK</StepButton>
                         </div>*/}
                     </StepContent>
-                    
+
                 </Step>
                 <Step>
                     <StepLabel>Payment</StepLabel>
@@ -472,9 +549,9 @@ class Checkout extends Component {
                     </StepContent>
                 </Step>
             </Stepper>
-            
-            );
-    }  ;
+
+        );
+    };
 }
 
 export default Checkout;
