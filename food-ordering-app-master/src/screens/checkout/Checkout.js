@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -17,8 +17,16 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 import { StepButton } from '@material-ui/core';
-//import StarBorderIcon from '@material-ui/icons/StarBorder';
+import PropTypes from 'prop-types';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -45,7 +53,7 @@ const steps = 0;
 
 const handleNext = () => {
     //setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setActiveStep = activeStep+ 1;
+    setActiveStep = activeStep + 1;
 };
 
 const handleBack = () => {
@@ -55,6 +63,18 @@ const handleBack = () => {
 const handleReset = () => {
     setActiveStep(0);
 };
+const TabContainer = function (props) {
+    return (
+        <Typography component="div" style={{ padding: 0, textAlign: 'left' }}>
+            {props.children}
+        </Typography>
+    )
+}
+
+TabContainer.propTypes = {
+    children: PropTypes.node.isRequired
+}
+
 /*
 function getSteps() {
     return ['Delivery', 'Payment'];
@@ -225,25 +245,26 @@ class Checkout extends Component {
         this.state = {
             modalIsOpen: false,
             value: 0,
-            usernameRequired: "dispNone",
-            username: "",
-            loginPasswordRequired: "dispNone",
-            loginPassword: "",
-            firstnameRequired: "dispNone",
-            firstname: "",
-            lastnameRequired: "dispNone",
-            lastname: "",
-            emailRequired: "dispNone",
-            email: "",
-            registerPasswordRequired: "dispNone",
-            registerPassword: "",
-            contactRequired: "dispNone",
-            contact: "",
-            registrationSuccess: false,
+            flatNoRequired: "dispNone",
+            flatNo: "",
+            statesListRequired: "dispNone",
+            statesList: [],
+            state_uuid: "",
+            localityRequired: "dispNone",
+            locality: "",
+            cityRequired: "dispNone",
+            city: "",
+            pincodeRequired: "dispNone",
+            pincode: "",
+            saveAddress: false,
             paymentMethods: [],
+            addressList: [],
+            message: null,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
+        this.getExistingAddress();
         this.getPaymentMethods();
+        this.getStatesList();
     }
     /*
     componentDidMount() {
@@ -254,28 +275,141 @@ class Checkout extends Component {
         this.setState({ value });
     }
 
+    statesChangeHandler = event => {
+        this.setState({ state_uuid: event.target.value });
+    }
+
     getPaymentMethods = () => {
-        
+
         let that = this;
         let url = `${constants.paymentMethodUrl}`;
         console.log("In get" + url);
         return fetch(url, {
             method: 'GET',
         }).then((response) => {
-            
-           console.log("In then"+JSON.stringify(response));
+
+            console.log("In then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
             //console.log("In then2" + jsonResponse);
             that.setState({
                 paymentMethods: jsonResponse.paymentMethods
             });
-            console.log("val"+this.state.paymentMethods);
+            console.log("val" + this.state.paymentMethods);
         }).catch((error) => {
-            console.log('error user data', error);
+            console.log('error fetching paymentMethods', error);
         });
     }
 
+    getStatesList = () => {
+        let that = this;
+        let url = `${constants.statesUrl}`;
+        console.log("In state get" + url);
+        return fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+
+            console.log("In state then" + JSON.stringify(response));
+            return response.json();
+        }).then((jsonResponse) => {
+            //console.log("In then2" + jsonResponse);
+            that.setState({
+                statesList: jsonResponse.states
+            });
+            console.log("val" + this.state.statesList);
+        }).catch((error) => {
+            console.log('error fetching States List', error);
+        });
+    }
+
+    getExistingAddress = () => {
+        let that = this;
+        let url = `${constants.addressUrl}`;
+        console.log("In Address get" + url);
+        return fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+
+            console.log("In address then" + JSON.stringify(response));
+            return response.json();
+        }).then((jsonResponse) => {
+            //console.log("In then2" + jsonResponse);
+            if (jsonResponse.addresses === null) {
+                this.setState({ message: "There are no saved addresses! You can save an address using the 'New Address' tab or using your 'Profile' menu option." })
+            }
+            if (jsonResponse.restaurants !== null) {
+                this.setState({ message: null })
+            }
+            that.setState({
+                addressList: jsonResponse.addresses
+            });
+            console.log("val" + this.state.addressList);
+        }).catch((error) => {
+            console.log('error fetching addressList', error);
+        });
+    }
+
+    saveAddressClickHandler = () => {
+        this.state.flatNo === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
+        this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
+        this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
+        this.state.statesList === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
+        this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
+
+        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { return; }
+
+        this.props.history.push({
+            pathname: '/confirm/' + this.props.match.params.id,
+            bookingSummary: this.state
+        });
+
+        console.log("In SaveAddress post" + url);
+        let saveAddressData = null;
+        let xhrSaveAddress = new XMLHttpRequest();
+        let that = this;
+        xhrSaveAddress.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+                sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
+                that.setState({
+                    saveAddress: true,
+                });
+
+            }
+        });
+
+        
+        let url = `${constants.addressUrl}`;
+        xhrSaveAddress.open("POST", url);
+        saveAddressData.
+        xhrSaveAddress.setRequestHeader("authorization", "Basic " + window.btoa(this.state.username + ":" + this.state.loginPassword));
+        xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
+        xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
+        
+        xhrSaveAddress.send(saveAddressData);
+
+
+        /*return fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.state)
+        })then(response => {
+
+            console.log("In state then" + JSON.stringify(response));
+            return response.json();
+        }).then((jsonResponse) => {
+            console.log("In then2" + response);
+            
+            //console.log("val" + this.state.statesList);
+        }).catch((error) => {
+            console.log('error saving Address', error);
+        });*/
+    }
+
+    
     render() {
         //return (<VerticalStepper/>);
         return (
@@ -289,18 +423,89 @@ class Checkout extends Component {
                                 <Tab label="NEW ADDRESS" />
                             </Tabs>
                         </Typography>
-                        <FormControl>
-                            <FormLabel>Select Mode of Payment</FormLabel>
+                        {this.state.value === 0 &&
+                            <TabContainer>
+                            <GridList cellHeight={160} cols={2} >
+                                {this.state.addressList != null && this.state.addressList.map(address => (
+                                        <GridListTile
+                                            className="gridTile"
+                                        key={address.id}>
+                                        {address.flatNo}<br />
+                                        {address.locality}<br />
+                                        {address.city}<br />
+                                        {address.state}<br />
+                                        {address.pincode}
+                                            
+                                        </GridListTile>
+                                    ))}
+                            </GridList>
+                            <div>{this.state.message}</div>
+                            </TabContainer>
+                        }
 
-                            <RadioGroup column>
-                                {
-                                    this.state.paymentMethods.map(method => (
-                                        <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name}/>
-                                        )
-                                    )
+                        {this.state.value === 1 &&
+                            <TabContainer>
+                                <FormControl required>
+                                    <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
+                                    <Input id="flatNo" type="text" flatNo={this.state.flatNo} onChange={this.inputFlatNoChangeHandler} />
+                                    <FormHelperText className={this.state.flatNoRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="Locality">Locality</InputLabel>
+                                    <Input id="locality" type="text" locality={this.state.locality} onChange={this.inputLocalityChangeHandler} />
+                                    <FormHelperText className={this.state.localityRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="City">City</InputLabel>
+                                    <Input id="city" type="text" city={this.state.city} onChange={this.inputCityChangeHandler} />
+                                    <FormHelperText className={this.state.cityRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="stateList">State</InputLabel>
+                                    <Select
+                                        value={this.state.statesList}
+                                        onChange={this.statesChangeHandler}
+                                    >
+                                        {this.state.statesList.map(st => (
+                                            <MenuItem key={"state" + st.id} value={st.id}>
+                                                {st.state_name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    <FormHelperText className={this.state.stateListRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+
+                                <br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="Pincode">Pincode</InputLabel>
+                                    <Input id="pincode" type="text" pincode={this.state.pincode} onChange={this.inputPincodeChangeHandler} />
+                                    <FormHelperText className={this.state.pincodeRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                {this.state.saveAddress === true &&
+                                    <FormControl>
+                                        <span className="successText">
+                                            Registration Successful. Please Login!
+                                      </span>
+                                    </FormControl>
                                 }
-                            </RadioGroup>
-                        </FormControl>
+                                <br />
+                                <Button variant="contained" color="primary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
+                            </TabContainer>
+                        }
                         <div className={classes.actionsContainer}>
                             <div>
                                 <Button
@@ -325,24 +530,28 @@ class Checkout extends Component {
                             <StepButton children="Back" className={classes.button}>BACK</StepButton>
                         </div>*/}
                     </StepContent>
-                    
+
                 </Step>
                 <Step>
                     <StepLabel>Payment</StepLabel>
                     <StepContent>
                         <FormControl>
                             <FormLabel>Select Mode of Payment</FormLabel>
-
-                            <RadioGroup id="paymentMethods" name="customized-radios">
-                                <Radio id="cod" name="cash" value="COD" checked={false}> COD </Radio>
+                            <RadioGroup column>
+                                {
+                                    this.state.paymentMethods.map(method => (
+                                        <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name} />
+                                    )
+                                    )
+                                }
                             </RadioGroup>
                         </FormControl>
                     </StepContent>
                 </Step>
             </Stepper>
-            
-            );
-    }  ;
+
+        );
+    };
 }
 
 export default Checkout;
