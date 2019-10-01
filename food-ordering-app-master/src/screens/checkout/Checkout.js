@@ -242,6 +242,8 @@ class Checkout extends Component {
 
     constructor() {
         super();
+        /*temp check*/
+        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiI2OTM5M2Q0Ny0wYTc3LTQ4YTYtYTA5Mi1jM2UxMzRjZmFjZGQiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU2OTkyMywiaWF0IjoxNTY5ODk0fQ.HSSw0v3NHXRsElHcJ8XKa45kzA7JVANbLJ-u5ZQN7zAINE7wUH7CiNRRouMZoTVbuquk36XfXj6c7sQrkik6Xg");
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -262,9 +264,11 @@ class Checkout extends Component {
             message: null,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
+        
         this.getExistingAddress();
         this.getPaymentMethods();
         this.getStatesList();
+        
     }
     /*
     componentDidMount() {
@@ -325,9 +329,12 @@ class Checkout extends Component {
     getExistingAddress = () => {
         let that = this;
         let url = `${constants.addressUrl}`;
-        console.log("In Address get" + url);
+        console.log("In Address get" + url + " token" + sessionStorage.getItem("authorization"));
         return fetch(url, {
             method: 'GET',
+            headers: {
+                'authorization': sessionStorage.getItem("authorization")
+            }
         }).then((response) => {
 
             console.log("In address then" + JSON.stringify(response));
