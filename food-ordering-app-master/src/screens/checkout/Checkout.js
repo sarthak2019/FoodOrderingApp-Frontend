@@ -364,7 +364,13 @@ class Checkout extends Component {
         });
 
         console.log("In SaveAddress post" + url);
-        let saveAddressData = null;
+        let saveAddressData = JSON.stringify({
+            "city": this.state.city,
+            "flat_building_name": this.state.flatNo,
+            "locality": this.state.locality,
+            "pincode": this.state.pincode,
+            "state_uuid": this.state.state_uuid
+        });
         let xhrSaveAddress = new XMLHttpRequest();
         let that = this;
         xhrSaveAddress.addEventListener("readystatechange", function () {
@@ -381,7 +387,6 @@ class Checkout extends Component {
         
         let url = `${constants.addressUrl}`;
         xhrSaveAddress.open("POST", url);
-        saveAddressData.
         xhrSaveAddress.setRequestHeader("authorization", "Basic " + window.btoa(this.state.username + ":" + this.state.loginPassword));
         xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
         xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
