@@ -440,11 +440,11 @@ class Checkout extends Component {
                                         <GridListTile
                                             className="gridTile"
                                         key={address.id}>
-                                        {address.flatNo}<br />
-                                        {address.locality}<br />
-                                        {address.city}<br />
-                                        {address.state.state_name}<br />
-                                        {address.pincode}
+                                        <div>{address.flat_building_name}</div>
+                                        <div>{address.locality}</div>
+                                        <div>{address.city}</div>
+                                        <div>{address.state.state_name}</div>
+                                        <div>{address.pincode}</div>
                                             
                                         </GridListTile>
                                     ))}
