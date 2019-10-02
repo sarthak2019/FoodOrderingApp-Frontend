@@ -43,6 +43,11 @@ const useStyles = makeStyles(theme => ({
     resetContainer: {
         padding: theme.spacing(3),
     },
+    gridList: {
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+    },
 }));
 
 const classes = useStyles;
@@ -437,10 +442,10 @@ class Checkout extends Component {
                         </Typography>
                         {this.state.value === 0 &&
                             <TabContainer>
-                            <GridList cellHeight={160} cols={3} >
+                            <GridList cellHeight={160} cols={3} rows={1} className="gridListUpcomingMovies">
                                 {this.state.addressList != null && this.state.addressList.map(address => (
-                                        <GridListTile
-                                            className="gridTile"
+                                    <GridListTile
+                                        className="gridTile" cols={1} rows={1}
                                         key={address.id}>
                                         <div>{address.flat_building_name}</div>
                                         <div>{address.locality}</div>
