@@ -336,7 +336,6 @@ class Checkout extends Component {
                 'authorization': sessionStorage.getItem("authorization")
             }
         }).then((response) => {
-
             console.log("In address then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
@@ -349,7 +348,6 @@ class Checkout extends Component {
             }
             that.setState({
                 addressList: jsonResponse.addresses
-
             });
             console.log("val" + JSON.stringify(this.state.addressList));
         }).catch((error) => {
@@ -391,7 +389,6 @@ class Checkout extends Component {
 
             }
         });
-
         
         let url = `${constants.addressUrl}`;
         xhrSaveAddress.open("POST", url);
@@ -436,7 +433,7 @@ class Checkout extends Component {
                                 <Tab label="NEW ADDRESS" />
                             </Tabs>
                         </Typography>
-                        {/*this.state.value === 0 &&
+                        {this.state.value === 0 &&
                             <TabContainer>
                             <GridList cellHeight={160} cols={2} >
                                 {this.state.addressList != null && this.state.addressList.map(address => (
@@ -446,7 +443,7 @@ class Checkout extends Component {
                                         {address.flatNo}<br />
                                         {address.locality}<br />
                                         {address.city}<br />
-                                        {address.state}<br />
+                                        {address.state.state_name}<br />
                                         {address.pincode}
                                             
                                         </GridListTile>
@@ -454,7 +451,7 @@ class Checkout extends Component {
                             </GridList>
                             <div>{this.state.message}</div>
                             </TabContainer>
-                        */}
+                        }
 
                         {this.state.value === 1 &&
                             <TabContainer>
