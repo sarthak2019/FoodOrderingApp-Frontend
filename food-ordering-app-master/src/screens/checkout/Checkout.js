@@ -437,7 +437,7 @@ class Checkout extends Component {
                         </Typography>
                         {this.state.value === 0 &&
                             <TabContainer>
-                            <GridList cellHeight={160} cols={2} >
+                            <GridList cellHeight={160} cols={3} >
                                 {this.state.addressList != null && this.state.addressList.map(address => (
                                         <GridListTile
                                             className="gridTile"
@@ -491,7 +491,6 @@ class Checkout extends Component {
                                             <MenuItem key={"state" + st.id} value={st.id}>
                                                 {st.state_name}
                                             </MenuItem>
-                                            
                                         ))}
                                     </Select>
                                     <FormHelperText className={this.state.stateListRequired}>
