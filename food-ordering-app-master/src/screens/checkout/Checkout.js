@@ -243,7 +243,7 @@ class Checkout extends Component {
     constructor() {
         super();
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiI5YWYzZjAzNC1lODM2LTRmNTMtYjY5YS04NjU3MDEzYmU4YzIiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDAwOSwiaWF0IjoxNTY5OTgwfQ.UC43UmvS2wGbont3C9gdnIWWzXXrDZ0I-j1CxhhTVwTjscX21vSY3bbcKG8DOgiPDmkE_ZZSxXdtN5GDrN9QCA");
+        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiIwYjQ3ZTZiNy0wM2ZiLTRmYjItYjBmOC03MDBkMjAyOTFkOTUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDA0MCwiaWF0IjoxNTcwMDExfQ.BSgOl3lzpbXRS-GOFuBtGuWSD2d883JGBY1D-YiEeGkZ7zzOaldnRbVhNBOOGNZzoTY8ExhxsAJf-qKW-LcZCQ");
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -280,6 +280,7 @@ class Checkout extends Component {
     }
 
     statesChangeHandler = event => {
+        console.log("state changed");
         this.setState({ state_uuid: event.target.value });
     }
 
@@ -381,8 +382,8 @@ class Checkout extends Component {
         let that = this;
         xhrSaveAddress.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
-                sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
+                //sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+                //sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
                 that.setState({
                     saveAddress: true,
                 });
@@ -392,7 +393,8 @@ class Checkout extends Component {
 
         let url = `${constants.saveAddressUrl}`;
         xhrSaveAddress.open("POST", url);
-        xhrSaveAddress.setRequestHeader("authorization", "Basic " + window.btoa(this.state.username + ":" + this.state.loginPassword));
+        //xhrSaveAddress.setRequestHeader("authorization", "Bearer " + window.btoa(this.state.username + ":" + this.state.loginPassword));
+        xhrSaveAddress.setRequestHeader("authorization", "Bearer eyJraWQiOiI5YWYzZjAzNC1lODM2LTRmNTMtYjY5YS04NjU3MDEzYmU4YzIiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDAwOSwiaWF0IjoxNTY5OTgwfQ.UC43UmvS2wGbont3C9gdnIWWzXXrDZ0I-j1CxhhTVwTjscX21vSY3bbcKG8DOgiPDmkE_ZZSxXdtN5GDrN9QCA");
         xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
         xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
         
@@ -481,14 +483,15 @@ class Checkout extends Component {
                                 <br />
                                 <FormControl required>
                                     <InputLabel htmlFor="stateList">State</InputLabel>
-                                    <Select
-                                        value={this.state.statesList}
+                                <Select
+                                    value={this.state.state_uuid}
                                         onChange={this.statesChangeHandler}
                                     >
                                         {this.state.statesList.map(st => (
                                             <MenuItem key={"state" + st.id} value={st.id}>
                                                 {st.state_name}
                                             </MenuItem>
+                                            
                                         ))}
                                     </Select>
                                     <FormHelperText className={this.state.stateListRequired}>
@@ -513,7 +516,7 @@ class Checkout extends Component {
                                     </FormControl>
                                 }
                                 <br />
-                                <Button variant="contained" color="primary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
+                                <Button variant="contained" color="primary" onClick={()=>this.saveAddressClickHandler()}>SAVE ADDRESS</Button>
                             </TabContainer>
                         }
                         <div className={classes.actionsContainer}>
