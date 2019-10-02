@@ -43,8 +43,8 @@ const TabContainer = function (props) {
 
 class Header extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             modalIsOpen: false,
@@ -92,20 +92,22 @@ class Header extends Component {
     }
 
     render() {
+        const { classes, screen, history } = this.props;
         return (
             <div>
                 <header className="app-header">
                     <span style={{ width: "33%" }}>
                         <FastfoodIcon style={{ color: "white" }}></FastfoodIcon>
                     </span>
-                    <span style={{ width: "33%" }}>
+                    {screen === "Home" && (<span style={{ width: "33%" }}>
                         <SearchIcon style={{ color: "white", verticalAlign: "middle" }}>
                         </SearchIcon>
                         <Input id="search" name="search"
                             style={{ width: "220px", color: "white" }} type="text"
                             placeholder="Search by Restaurant Name" onChange={this.searchChangeHandler}>
                         </Input>
-                    </span>
+                    </span>)}
+                    {screen != "Home" && (<span style={{ width: "33%" }}></span>)}
                     <span style={{ width: "33%", textAlign: "right" }}>
                         {this.state.loggedIn === false && <Button variant="contained" onClick={this.openModalHandler} color="default">
                             <AccountCircleIcon></AccountCircleIcon>
@@ -301,17 +303,20 @@ class Header extends Component {
             that.setState({
                 data: jsonResponse.restaurants
             });
-            console.log(this.state.data);
+            this.props.restaurantsData();
+
         }).catch((error) => {
             console.log('error restaurant data', error);
+            // this.props.restaurantsData();
         });
+        
     }
 
     searchChangeHandler = (e) => {
-        const state = this.state;
-        state[e.target.name] = e.target.value;
-        this.setState(state);
-        this.getRestaurantData(this.state.search)
+        const state = this.state
+        state[e.target.name] = e.target.value
+        this.setState(state)
+        this.props.searchHandler(this.state.search)
     }
 
     inputUsernameChangeHandler = (e) => {
@@ -550,26 +555,10 @@ class Header extends Component {
         });
     }
 
-    logoutHandler = (e) => {
-        sessionStorage.removeItem("uuid");
-        sessionStorage.removeItem("access-token");
-        sessionStorage.removeItem("first_name");
-        sessionStorage.removeItem("last_name");
-        sessionStorage.removeItem("email_address");
-        sessionStorage.removeItem("contact_number");
-
-        this.setState({
-            loggedIn: false,
-            loginDisplay: "LOGIN",
-            first_name: null,
-            last_name: null,
-            email_address: null,
-            contact_number: null
-        });
-
-        this.handleClose();
-        this.props.history.replace('/');
-    }
+    // logoutHandler = (e) => {
+    //     this.props.logoutHandler();
+    //     this.handleClose();
+    // }
 
     handleClose = () => {
         this.setState({
@@ -578,9 +567,23 @@ class Header extends Component {
         });
     }
 
-    handleProfile = () => {
+    logoutHandler = () => {
+        sessionStorage.clear();
+        this.setState({ loggedIn: false,
+            loginDisplay: "LOGIN" })
         this.handleClose();
+        this.props.history.replace('/');
+    }
+
+    // handleClose = () => {
+    //     this.props.history.push('/profile');
+    // }
+
+    handleProfile = () => {
+        // this.props.handleProfile();
+        // this.handleClose();
         this.props.history.push('/profile');
+        this.handleClose();
     }
 
 }
