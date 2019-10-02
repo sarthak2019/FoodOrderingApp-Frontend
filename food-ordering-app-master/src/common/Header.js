@@ -17,6 +17,10 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
+import MenuItem from "@material-ui/core/MenuItem";
+import Popover from "@material-ui/core/Popover";
+import Profile from '../screens/profile/Profile';
+
 
 const customStyles = {
     content: {
@@ -63,6 +67,7 @@ class Header extends Component {
             contact: "",
             registrationSuccess: false,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true,
+            uuid: sessionStorage.getItem("access-token") == null ? null : sessionStorage.getItem("access-token"),
             emailValid: "dispNone",
             emailCheck: false,
             passwordCheck: false,
@@ -75,7 +80,13 @@ class Header extends Component {
             loginErrormessage: "",
             signupErrordisp: "dispNone",
             signupErrormessage: "",
-            loginDisplay: "LOGIN"
+            anchorEl: null,
+            popoverOpen: false,
+            loginDisplay: sessionStorage.getItem("first_name") == null ? "LOGIN" : sessionStorage.getItem("first_name"),
+            first_name: sessionStorage.getItem("first_name"),
+            last_name: sessionStorage.getItem("last_name"),
+            email_address: sessionStorage.getItem("email_address"),
+            contact_number: sessionStorage.getItem("contact_number"),
         }
 
     }
@@ -96,10 +107,40 @@ class Header extends Component {
                         </Input>
                     </span>
                     <span style={{ width: "33%", textAlign: "right" }}>
-                        <Button variant="contained" onClick={this.openModalHandler} color="default">
+                        {this.state.loggedIn === false && <Button variant="contained" onClick={this.openModalHandler} color="default">
                             <AccountCircleIcon></AccountCircleIcon>
                             {this.state.loginDisplay}
-                        </Button>
+                        </Button>}
+                        {this.state.loggedIn === true &&
+                            <span style={{ verticalAlign: "middle" }}>
+                                <AccountCircleIcon className="account-circle" onClick={this.openModalHandler}>
+
+                                </AccountCircleIcon><span style={{ verticalAlign: "super", color: "white" }}>&nbsp;&nbsp;{this.state.loginDisplay}</span>
+                                <Popover
+                                    id="popover1"
+                                    open={this.state.popoverOpen}
+                                    anchorEl={this.state.anchorEl}
+                                    onClose={this.handleClose}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'center',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'center',
+                                    }}
+                                >
+                                    <div style={{ padding: "5px" }}>
+                                        <div>
+                                            <MenuItem onClick={this.handleProfile}>
+                                                My Profile
+                                    </MenuItem>
+                                            <div className="hr" />
+                                        </div>
+                                        <MenuItem onClick={this.logoutHandler}>Logout</MenuItem>
+                                    </div>
+                                </Popover>
+                            </span>}
                     </span>
 
 
@@ -227,15 +268,15 @@ class Header extends Component {
                     }
                 </Modal>
 
-                        <Snackbar
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                          }}
-                          open={this.state.snackOpen} message={this.state.snackMessage}
-                          autoHideDuration={6000}
-                          onClose={this.handleSnackClose}>
-                        </Snackbar>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.snackOpen} message={this.state.snackMessage}
+                    autoHideDuration={6000}
+                    onClose={this.handleSnackClose}>
+                </Snackbar>
             </div>
         )
 
@@ -293,10 +334,18 @@ class Header extends Component {
                 if (this.readyState === 4 && this.status === 200) {
                     sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
                     sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
+                    sessionStorage.setItem("first_name", JSON.parse(this.responseText).first_name);
+                    sessionStorage.setItem("last_name", JSON.parse(this.responseText).last_name);
+                    sessionStorage.setItem("email_address", JSON.parse(this.responseText).email_address);
+                    sessionStorage.setItem("contact_number", JSON.parse(this.responseText).contact_number);
 
                     that.setState({
                         loggedIn: true,
-                        loginDisplay: JSON.parse(this.responseText).first_name
+                        loginDisplay: sessionStorage.getItem("first_name"),
+                        first_name: sessionStorage.getItem("first_name"),
+                        last_name: sessionStorage.getItem("last_name"),
+                        email_address: sessionStorage.getItem("email_address"),
+                        contact_number: sessionStorage.getItem("contact_number")
                     });
 
                     that.closeModalHandler();
@@ -443,31 +492,42 @@ class Header extends Component {
     }
 
     handleSnackClose = () => {
-        this.setState({snackOpen: false})
+        this.setState({ snackOpen: false })
     }
 
-    openModalHandler = () => {
-        this.setState({
-            modalIsOpen: true,
-            value: 0,
-            usernameRequired: "dispNone",
-            username: "",
-            loginPasswordRequired: "dispNone",
-            loginPassword: "",
-            firstnameRequired: "dispNone",
-            firstname: "",
-            lastname: "",
-            emailRequired: "dispNone",
-            email: "",
-            registerPasswordRequired: "dispNone",
-            registerPassword: "",
-            contactRequired: "dispNone",
-            contact: ""
-        });
+    openModalHandler = event => {
+        if (this.state.loggedIn === false) {
+            this.setState({
+                modalIsOpen: true,
+                value: 0,
+                usernameRequired: "dispNone",
+                username: "",
+                loginPasswordRequired: "dispNone",
+                loginPassword: "",
+                firstnameRequired: "dispNone",
+                firstname: "",
+                lastname: "",
+                emailRequired: "dispNone",
+                email: "",
+                registerPasswordRequired: "dispNone",
+                registerPassword: "",
+                contactRequired: "dispNone",
+                contact: ""
+            });
+
+        }
+        if (this.state.loggedIn === true) {
+            this.setState({
+                anchorEl: event.currentTarget,
+                popoverOpen: true
+            });
+            console.log(this.state.anchorEl)
+        }
     }
 
     tabChangeHandler = (event, value) => {
-        this.setState({ value,
+        this.setState({
+            value,
             usernameRequired: "dispNone",
             username: "",
             loginPasswordRequired: "dispNone",
@@ -487,7 +547,40 @@ class Header extends Component {
             passwordValid: "dispNone",
             phoneCheck: false,
             phoneValid: "dispNone",
-         });
+        });
+    }
+
+    logoutHandler = (e) => {
+        sessionStorage.removeItem("uuid");
+        sessionStorage.removeItem("access-token");
+        sessionStorage.removeItem("first_name");
+        sessionStorage.removeItem("last_name");
+        sessionStorage.removeItem("email_address");
+        sessionStorage.removeItem("contact_number");
+
+        this.setState({
+            loggedIn: false,
+            loginDisplay: "LOGIN",
+            first_name: null,
+            last_name: null,
+            email_address: null,
+            contact_number: null
+        });
+
+        this.handleClose();
+        this.props.history.replace('/');
+    }
+
+    handleClose = () => {
+        this.setState({
+            anchorEl: null,
+            popoverOpen: false
+        });
+    }
+
+    handleProfile = () => {
+        this.handleClose();
+        this.props.history.push('/profile');
     }
 
 }

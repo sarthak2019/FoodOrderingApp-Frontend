@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 //import Details from '../screens/details/Details';
 import Header from '../common/Header';
+import Profile from '../screens/profile/Profile';
 
 class Controller extends Component {
 
@@ -16,6 +17,7 @@ class Controller extends Component {
                     {/* <Route path='/checkout' component={Checkout} /> */}
                     {/* <Route path='/details' component={Details} /> */}
                     <Route path='/' component={Header} />
+                    <Route path='/profile' component={Profile} />
                 </div>
             </Router>
         )
