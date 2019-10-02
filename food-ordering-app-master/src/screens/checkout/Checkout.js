@@ -243,7 +243,7 @@ class Checkout extends Component {
     constructor() {
         super();
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiI2OTM5M2Q0Ny0wYTc3LTQ4YTYtYTA5Mi1jM2UxMzRjZmFjZGQiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU2OTkyMywiaWF0IjoxNTY5ODk0fQ.HSSw0v3NHXRsElHcJ8XKa45kzA7JVANbLJ-u5ZQN7zAINE7wUH7CiNRRouMZoTVbuquk36XfXj6c7sQrkik6Xg");
+        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiI5YWYzZjAzNC1lODM2LTRmNTMtYjY5YS04NjU3MDEzYmU4YzIiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDAwOSwiaWF0IjoxNTY5OTgwfQ.UC43UmvS2wGbont3C9gdnIWWzXXrDZ0I-j1CxhhTVwTjscX21vSY3bbcKG8DOgiPDmkE_ZZSxXdtN5GDrN9QCA");
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -336,21 +336,20 @@ class Checkout extends Component {
                 'authorization': sessionStorage.getItem("authorization")
             }
         }).then((response) => {
-
             console.log("In address then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
-            //console.log("In then2" + jsonResponse);
+            console.log("In then2" + jsonResponse.addresses);
             if (jsonResponse.addresses === null) {
                 this.setState({ message: "There are no saved addresses! You can save an address using the 'New Address' tab or using your 'Profile' menu option." })
             }
-            if (jsonResponse.restaurants !== null) {
+            if (jsonResponse.addresses !== null) {
                 this.setState({ message: null })
             }
             that.setState({
                 addressList: jsonResponse.addresses
             });
-            console.log("val" + this.state.addressList);
+            console.log("val" + JSON.stringify(this.state.addressList));
         }).catch((error) => {
             console.log('error fetching addressList', error);
         });
@@ -390,7 +389,6 @@ class Checkout extends Component {
 
             }
         });
-
         
         let url = `${constants.addressUrl}`;
         xhrSaveAddress.open("POST", url);
@@ -442,11 +440,11 @@ class Checkout extends Component {
                                         <GridListTile
                                             className="gridTile"
                                         key={address.id}>
-                                        {address.flatNo}<br />
-                                        {address.locality}<br />
-                                        {address.city}<br />
-                                        {address.state}<br />
-                                        {address.pincode}
+                                        <div>{address.flat_building_name}</div>
+                                        <div>{address.locality}</div>
+                                        <div>{address.city}</div>
+                                        <div>{address.state.state_name}</div>
+                                        <div>{address.pincode}</div>
                                             
                                         </GridListTile>
                                     ))}
