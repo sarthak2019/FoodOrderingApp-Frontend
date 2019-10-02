@@ -4,6 +4,5 @@
 }
 .gridListUpcomingMovies{
     flex-wrap: nowrap;
-    transform: translateZ(0);
     width: 100%;
 }

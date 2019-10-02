@@ -244,7 +244,7 @@ const VerticalStepper= ()=> {
 */
 
 class Checkout extends Component {
-
+    
     constructor() {
         super();
         /*temp check*/
@@ -442,10 +442,10 @@ class Checkout extends Component {
                         </Typography>
                         {this.state.value === 0 &&
                             <TabContainer>
-                            <GridList cellHeight={160} cols={3} rows={1} className="gridListUpcomingMovies">
+                            <GridList cols={3} className="gridListUpcomingMovies">
                                 {this.state.addressList != null && this.state.addressList.map(address => (
                                     <GridListTile
-                                        className="gridTile" cols={1} rows={1}
+                                        className="gridTile"
                                         key={address.id}>
                                         <div>{address.flat_building_name}</div>
                                         <div>{address.locality}</div>
