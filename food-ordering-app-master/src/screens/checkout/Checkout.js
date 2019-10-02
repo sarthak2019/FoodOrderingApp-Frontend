@@ -389,8 +389,8 @@ class Checkout extends Component {
 
             }
         });
-        
-        let url = `${constants.addressUrl}`;
+
+        let url = `${constants.saveAddressUrl}`;
         xhrSaveAddress.open("POST", url);
         xhrSaveAddress.setRequestHeader("authorization", "Basic " + window.btoa(this.state.username + ":" + this.state.loginPassword));
         xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
