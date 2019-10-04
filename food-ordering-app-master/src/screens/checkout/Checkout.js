@@ -51,22 +51,39 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const classes = useStyles;
-const activeStep = 0;
-const setActiveStep = 0;
-const steps = 0;
+/*let activeStep = 0;
+let setActiveStep = 0;
+let steps = 0;*/
 //const steps = getSteps();
+
+
+
+
+/*handlePrev = () => {
+    const { stepIndex } = this.state;
+    if (stepIndex > 0) {
+        this.setState({ stepIndex: stepIndex - 1 });
+    }
+};
 
 const handleNext = () => {
     //setActiveStep(prevActiveStep => prevActiveStep + 1);
+    console.log("next");
     setActiveStep = activeStep + 1;
+    //this.setState(setActiveStep) = this.state.activeStep + 1;
+    //console.log("End next" + this.state.setActiveStep);
+};
+*/
+const handleBack = () => {
+    console.log("back");
+    //setActiveStep(prevActiveStep => prevActiveStep - 1);
 };
 
-const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
-};
+
 
 const handleReset = () => {
-    setActiveStep(0);
+    console.log("Reset");
+    //setActiveStep(0);
 };
 const TabContainer = function (props) {
     return (
@@ -248,7 +265,7 @@ class Checkout extends Component {
     constructor() {
         super();
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiIwYjQ3ZTZiNy0wM2ZiLTRmYjItYjBmOC03MDBkMjAyOTFkOTUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDA0MCwiaWF0IjoxNTcwMDExfQ.BSgOl3lzpbXRS-GOFuBtGuWSD2d883JGBY1D-YiEeGkZ7zzOaldnRbVhNBOOGNZzoTY8ExhxsAJf-qKW-LcZCQ");
+        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiNTI3ZGZlOC1iZGQ1LTRiMDctOTg2Yy00NTNjOTAwNmE0M2QiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDIzNCwiaWF0IjoxNTcwMjA2fQ.eDevtNqqBJdwk3ENLkA-oOHnJUiN_DNILzpLrF9ow5OBjtrley_fdOR1SC288Aq08ZzDbJKsN2RZO2Babt9B5w");
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -267,6 +284,7 @@ class Checkout extends Component {
             paymentMethods: [],
             addressList: [],
             message: null,
+            stepIndex: 0,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
         
@@ -288,6 +306,25 @@ class Checkout extends Component {
         console.log("state changed");
         this.setState({ state_uuid: event.target.value });
     }
+
+    /*
+    handleNext = () => {
+        const { currIndex } = this.state.stepIndex;
+        if ({ currIndex} < 2) {
+            this.setState({ stepIndex: currIndex + 1 });
+        }
+        console.log("next currIndex" + { currIndex }+"-- "+ this.state.stepIndex);
+    };*/
+
+    handleNext = () => {
+        const { stepIndex } = this.state;
+        this.setState({
+            stepIndex: stepIndex + 1,
+            finished: stepIndex >= 1,
+        });
+        console.log("next currIndex" + { stepIndex } + "-- " + this.state.stepIndex);
+    };
+
 
     getPaymentMethods = () => {
 
@@ -429,8 +466,10 @@ class Checkout extends Component {
     
     render() {
         //return (<VerticalStepper/>);
+        const { stepIndex } = this.state.stepIndex;
+        const steps = 2;
         return (
-            <Stepper orientation="vertical">
+            <Stepper active={stepIndex} orientation="vertical">
                 <Step>
                     <StepLabel>Delivery</StepLabel>
                     <StepContent>
@@ -526,7 +565,7 @@ class Checkout extends Component {
                         <div className={classes.actionsContainer}>
                             <div>
                                 <Button
-                                    disabled={activeStep === 0}
+                                    disabled={this.state.stepIndex === 0}
                                     onClick={handleBack}
                                     className={classes.button}
                                 >
@@ -535,10 +574,10 @@ class Checkout extends Component {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={handleNext}
+                                    onClick={this.handleNext}
                                     className={classes.button}
                                 >
-                                    {activeStep === steps - 1 ? 'Finish' : 'Next'}
+                                    {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
                                 </Button>
                             </div>
                         </div>{/*
