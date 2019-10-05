@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 //import Details from '../screens/details/Details';
 import Home from '../screens/home/Home';
 import Profile from '../screens/profile/Profile';
+import Details from '../screens/details/Details';
 import { common } from '@material-ui/core/colors';
 import Header from '../common/Header';
 
@@ -20,6 +21,7 @@ class Controller extends Component {
                     {/* <Route path='/details' component={Details} /> */}
                     <Route exact path='/' component={Home} />
                     <Route path='/profile' component={Profile} />
+                    <Route path='/restaurant/:id' component={Details} />
                     {/* <Route path='/' component={Header} /> */}
                 </div>
             </Router>

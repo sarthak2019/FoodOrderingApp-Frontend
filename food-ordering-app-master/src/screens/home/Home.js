@@ -33,7 +33,7 @@ class Home extends Component {
                     {(this.state.allrestaurantsData !== null) && (this.state.allrestaurantsData !== undefined) ?
                         (this.state.allrestaurantsData.map(restaurant => (
 
-                            <Card key={restaurant.id} style={{ align: 'left', width: "25%", cursor: "pointer" }} onClick = {() => this.restaurantClickHandler(restaurant.id)}>
+                            <Card key={restaurant.id} style={{ align: 'left', width: "25%", cursor: "pointer" }} onClick={() => this.restaurantClickHandler(restaurant.id)}>
                                 <CardContent>
                                     <div>
                                         <img
@@ -78,7 +78,7 @@ class Home extends Component {
                 }
                 that.setState({
                     allrestaurantsData: jsonResponse.restaurants,
-                    message: null 
+                    message: null
                 });
             }).catch((error) => {
                 console.log('error restaurant data', error);
@@ -111,7 +111,7 @@ class Home extends Component {
     }
 
     restaurantClickHandler = (restuaurantId) => {
-        
+        this.props.history.push('/restaurant/' + restuaurantId);
     }
 
     // logout = () => {

@@ -14,6 +14,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
+import Header from '../../common/Header';
 
 const useStyles = makeStyles(theme => ({
     margin: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 class Details extends Component {
     getData = () => {
         let that = this;
-        let myUrl = `${constants.restaurantUrl}/246165d2-a238-11e8-9077-720006ceb890`;
+        let myUrl = `${constants.restaurantUrl}/${this.props.match.params.id}`;
         return fetch(myUrl, {
             method: 'GET',
         }).then((response) => {
@@ -72,6 +73,10 @@ class Details extends Component {
         return (
 
             <div className="details">
+
+                <Header
+                    screen={"Details"}
+                    history={this.props.history} />
 
                 <div className="restaurant-details-section">
                     <div className="left-details">
@@ -163,7 +168,7 @@ class Details extends Component {
                                     <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp;&nbsp;{this.state.total}</b></span>
                                 </div>,
                                 <div className="item-details">
-                                    <Button style={{ width: "100%" }}variant="contained" onClick={() => this.onItemCheckoutClicked()} color="primary">CHECKOUT</Button>
+                                    <Button style={{ width: "100%" }} variant="contained" onClick={() => this.onItemCheckoutClicked()} color="primary">CHECKOUT</Button>
                                 </div>
 
                             </CardContent>
@@ -171,7 +176,12 @@ class Details extends Component {
                     </div>
 
                 </div>
-                <Snackbar open={this.state.open} message={this.state.message} style={{ alignItems: 'left' }}
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.open} message={this.state.message}
                     action={[<IconButton
                         key="close"
                         aria-label="close"
@@ -252,8 +262,8 @@ class Details extends Component {
                 newItems.splice(itemIndex, 1, itemNodeNew);
                 this.state.item_count = this.state.item_count + 1
                 this.state.total = this.state.total + newItem.price
-                this.setState({open: true})
-                this.setState({message: "Item added to cart!"})
+                this.setState({ open: true })
+                this.setState({ message: "Item added to cart!" })
                 this.setState({ state_items_list: newItems });
                 return
             }
@@ -266,8 +276,8 @@ class Details extends Component {
         newItems.push(itemNodeNew)
         this.state.item_count = this.state.item_count + 1
         this.setState({ state_items_list: newItems });
-        this.setState({open: true})
-        this.setState({message: "Item added to cart!"})
+        this.setState({ open: true })
+        this.setState({ message: "Item added to cart!" })
     }
 
     onItemAddClicked = (newItem) => {
@@ -287,8 +297,8 @@ class Details extends Component {
         newItems.splice(itemIndex, 1, newItem);
         this.state.item_count = this.state.item_count + 1
         this.setState({ state_items_list: newItemList });
-        this.setState({open: true})
-        this.setState({message: "Item quantity increased by 1!"})
+        this.setState({ open: true })
+        this.setState({ message: "Item quantity increased by 1!" })
     }
 
     onItemRemoveClicked = (newItem) => {
@@ -312,9 +322,20 @@ class Details extends Component {
         }
         this.state.item_count = this.state.item_count - 1
         this.setState({ state_items_list: newItemList });
-        this.setState({open: true})
-        this.setState({message: "Item removed from cart!"})
-        
+        this.setState({ open: true })
+        if (newItem.count === 0) {
+            this.setState({
+                message: "Item removed from cart!",
+                open: true
+            })
+        }
+        else {
+            this.setState({
+                message: "",
+                open: false
+            })
+        }
+
     }
 
     handleClose = () => {
