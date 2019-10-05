@@ -26,6 +26,8 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import { StepButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import IconButton from '@material-ui/core/IconButton';
 /*import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';*/
 
@@ -268,7 +270,7 @@ class Checkout extends Component {
     constructor() {
         super();
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiNTI3ZGZlOC1iZGQ1LTRiMDctOTg2Yy00NTNjOTAwNmE0M2QiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDIzNCwiaWF0IjoxNTcwMjA2fQ.eDevtNqqBJdwk3ENLkA-oOHnJUiN_DNILzpLrF9ow5OBjtrley_fdOR1SC288Aq08ZzDbJKsN2RZO2Babt9B5w");
+        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiMmIyMjg4My03NjE5LTRlZWUtODY2OS1kMWFkYjIyODc5OWUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDMwNywiaWF0IjoxNTcwMjc4fQ.YrYzZ4rCxZjIPwARn2ESpcaTWAp00Ca97jkR6CYyvNa9l4S_ez1ScHR9OA9nFhYGSWbkTvCBhm0lWaQIPCQoVg");
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -321,12 +323,14 @@ class Checkout extends Component {
     };*/
 
     handleNext = () => {
-        const { stepIndex } = this.state;
+        //const { stepIndex } = this.state;
+        console.log("bEFORE currIndex" + "-- " + this.state.stepIndex);
+        this.state.stepIndex = this.state.stepIndex+1;
         this.setState({
-            stepIndex: stepIndex + 1,
-            finished: stepIndex >= 1,
+            //stepIndex: this.state.stepIndex + 1,
+            finished: this.state.stepIndex >= 1,
         });
-        console.log("next currIndex" + { stepIndex } + "-- " + this.state.stepIndex);
+        console.log("next currIndex-- " + this.state.stepIndex);
     };
 
 
@@ -335,6 +339,16 @@ class Checkout extends Component {
         if (stepIndex > 0) {
             this.setState({ stepIndex: stepIndex - 1 });
         }
+    };
+    
+    handleReset = () => {
+        const { stepIndex } = this.state;
+        console.log("in handlerReset"+stepIndex);
+        if (stepIndex > 0) {
+            this.setState({ stepIndex: 0});
+        }
+        console.log("after handlerReset" + this.state.stepIndex);
+        
     };
 
     getPaymentMethods = () => {
@@ -511,7 +525,7 @@ class Checkout extends Component {
                     onClick={this.handleNext}
                     className={classes.button}
                 >
-                    {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
+                    {this.state.stepIndex === 1 ? 'Finish' : 'Next'}
                 </Button>
             </div>  
         );
@@ -526,7 +540,7 @@ class Checkout extends Component {
         
         return (
         <div>
-            <Stepper active={stepIndex} orientation="vertical">
+            <Stepper active={this.state.stepIndex} orientation="vertical">
                 <Step>
                     <StepLabel>Delivery</StepLabel>
                     <StepContent>
@@ -537,7 +551,8 @@ class Checkout extends Component {
                             </Tabs>
                         </Typography>
                         {this.state.value === 0 &&
-                            <TabContainer>
+                                <TabContainer>
+                                <br/>
                             <GridList cols={3} className="gridListUpcomingMovies">
                                 {this.state.addressList != null && this.state.addressList.map(address => (
                                     <GridListTile
@@ -548,8 +563,11 @@ class Checkout extends Component {
                                         <div>{address.city}</div>
                                         <div>{address.state.state_name}</div>
                                         <div>{address.pincode}</div>
-                                            
-                                        </GridListTile>
+                                        <IconButton style={{ float: "right" }}>
+                                            <CheckCircleIcon className="tickIcon" />
+                                        </IconButton>
+                                    </GridListTile>
+                                    
                                     ))}
                             </GridList>
                             <div>{this.state.message}</div>
@@ -616,7 +634,7 @@ class Checkout extends Component {
                                     </FormControl>
                                 }
                                 <br />
-                                <Button variant="contained" color="primary" onClick={()=>this.saveAddressClickHandler()}>SAVE ADDRESS</Button>
+                                <Button variant="contained" color="secondary" onClick={()=>this.saveAddressClickHandler()}>SAVE ADDRESS</Button>
                             </TabContainer>
                         }
                         <div className={classes.actionsContainer}>
@@ -637,13 +655,14 @@ class Checkout extends Component {
                                     {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
                                 </Button> */}
 
-                                {this.renderStepActions(0)}
+                               
                             </div>
                         </div>{/*
                         <div className={classes.actionsContainer}>
                             <StepButton children="Payment" className={classes.button}>NEXT</StepButton>
                             <StepButton children="Back" className={classes.button}>BACK</StepButton>
                         </div>*/}
+                            {this.renderStepActions(0)}
                     </StepContent>
 
                 </Step>
@@ -660,16 +679,16 @@ class Checkout extends Component {
                                     )
                                 }
                             </RadioGroup>
-                            {this.renderStepActions(1)}
+                            
                         </FormControl>
-
+                            {this.renderStepActions(1)}
                     </StepContent>
                 </Step>
             </Stepper>
             { finished  && (
             <Paper square elevation={0} className={classes.resetContainer}>
                 <Typography><b> View the summary & place your order now!</b></Typography>
-                <Button onClick={handleReset} className={classes.button}>
+                <Button onClick={this.handleReset} className={classes.button}>
                     CHANGE
           </Button>
                     </Paper>
