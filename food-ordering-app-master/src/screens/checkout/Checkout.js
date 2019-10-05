@@ -28,9 +28,9 @@ import { StepButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import IconButton from '@material-ui/core/IconButton';
-/*import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';*/
-
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Divider from '@material-ui/core/Divider';
 
 
 
@@ -729,7 +729,40 @@ class Checkout extends Component {
                     </Paper>
         
             )
-            }
+                }
+                <div className="items-right-details">
+                    <Card className="cardStyle">
+                        <CardContent>
+                            <b>Summary</b>
+                            <div>
+                                {this.state.state_items_list.map(it => (
+                                    <div className="item-details">
+                                        <span style={{ align: 'left', width: "33%" }}>{it.name}</span>
+                                        <span style={{ align: 'left', width: "11%" }}>
+                                            {/*<RemoveIcon style={{ cursor: "pointer" }} onClick={() => this.onItemRemoveClicked(it)}></RemoveIcon>*/}
+                                        </span>
+                                        <span style={{ align: 'left', width: "11%" }}>{it.count}</span>
+                                        <span style={{ align: 'left', width: "11%" }}>
+                                            {/*<AddIcon style={{ cursor: "pointer" }} onClick={() => this.onItemAddClicked(it)}></AddIcon>*/}
+                                        </span>
+                                        <span style={{ align: 'left', width: "33%" }}>{it.price}</span>
+                                    </div>
+                                ))}
+                            </div>,
+                            
+                                <div className="item-details">
+                                <Divider variant="middle" />
+                                <span style={{ align: 'left', width: "50%" }}><b>NET AMOUNT</b></span>
+                                <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp;&nbsp;{this.state.total}</b></span>
+                            </div>,
+                                <div className="item-details">
+                                <Button style={{ width: "100%" }} variant="contained" onClick={() => this.onItemCheckoutClicked()} color="primary">PLACE ORDER</Button>
+                            </div>
+
+                        </CardContent>
+                    </Card>
+                </div>
+
          </div>
         );
     };
