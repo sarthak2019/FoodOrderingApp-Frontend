@@ -339,6 +339,14 @@ class Checkout extends Component {
         }
     };
 
+
+    handleReset = () => {
+        const { stepIndex } = this.state;
+        if (stepIndex > 0) {
+            this.setState({ stepIndex: 0});
+        }
+    };
+
     getPaymentMethods = () => {
 
         let that = this;
@@ -672,7 +680,7 @@ class Checkout extends Component {
             { finished  && (
             <Paper square elevation={0} className={classes.resetContainer}>
                 <Typography><b> View the summary & place your order now!</b></Typography>
-                <Button onClick={handleReset} className={classes.button}>
+                <Button onClick={this.handleReset} className={classes.button}>
                     CHANGE
           </Button>
                     </Paper>
