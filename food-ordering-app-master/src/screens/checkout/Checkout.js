@@ -291,6 +291,7 @@ class Checkout extends Component {
             message: null,
             stepIndex: 0,
             finished: false,
+            snackOpen:false,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
         
@@ -312,6 +313,20 @@ class Checkout extends Component {
         console.log("state changed");
         this.setState({ state_uuid: event.target.value });
     }
+
+    inputFlatNoChangeHandler = (e) => {
+        this.setState({ flatNo: e.target.value });
+    }
+    inputPincodeChangeHandler = (e) => {
+        this.setState({ pincode: e.target.value });
+    }
+    inputCityChangeHandler = (e) => {
+        this.setState({ city: e.target.value });
+    }
+    inputLocalityChangeHandler = (e) => {
+        this.setState({ locality: e.target.value });
+    }
+
 
     /*
     handleNext = () => {
@@ -434,12 +449,11 @@ class Checkout extends Component {
         console.log("1st check");
         if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { console.log("Exception");return; }
         console.log("af 1st check");
-        this.props.history.push({
+        /*this.props.history.push({
             pathname: '/confirm/' + this.props.match.params.id,
             bookingSummary: this.state
-        });
+        });*/
 
-        console.log("In SaveAddress post" + url);
         let saveAddressData = JSON.stringify({
             "city": this.state.city,
             "flat_building_name": this.state.flatNo,
@@ -451,20 +465,37 @@ class Checkout extends Component {
         let xhrSaveAddress = new XMLHttpRequest();
         let that = this;
         xhrSaveAddress.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
+            if (this.readyState === 4 && this.status === 201) {
                 //sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
                 //sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
                 that.setState({
                     saveAddress: true,
+                    snackOpen: true
                 });
-
+                console.log("save success");
+            }
+            if (this.readyState === 4 && this.status === 400) {
+                that.setState({
+                    saveAddressErrordisp: "dispBlock",
+                    saveAddressErrormessage: JSON.parse(this.responseText).message
+                });
+                console.log("save error" + JSON.parse(this.responseText).message);
+            }
+            if (this.readyState === 4 && (this.status !== 400 && this.status !== 201)) {
+                that.setState({
+                    saveAddressErrordisp: "dispBlock",
+                    saveAddressErrormessage: JSON.parse(this.responseText).error                     
+                });
+                console.log("save error" + JSON.parse(this.responseText).error);
             }
         });
 
         let url = `${constants.saveAddressUrl}`;
+        console.log("In SaveAddress post" + url);
+
         xhrSaveAddress.open("POST", url);
         //xhrSaveAddress.setRequestHeader("authorization", "Bearer " + window.btoa(this.state.username + ":" + this.state.loginPassword));
-        xhrSaveAddress.setRequestHeader("authorization", "Bearer eyJraWQiOiI5YWYzZjAzNC1lODM2LTRmNTMtYjY5YS04NjU3MDEzYmU4YzIiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDAwOSwiaWF0IjoxNTY5OTgwfQ.UC43UmvS2wGbont3C9gdnIWWzXXrDZ0I-j1CxhhTVwTjscX21vSY3bbcKG8DOgiPDmkE_ZZSxXdtN5GDrN9QCA");
+        xhrSaveAddress.setRequestHeader("authorization", sessionStorage.getItem("authorization"));
         xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
         xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
         
