@@ -321,12 +321,14 @@ class Checkout extends Component {
     };*/
 
     handleNext = () => {
-        const { stepIndex } = this.state;
+        //const { stepIndex } = this.state;
+        console.log("bEFORE currIndex" + "-- " + this.state.stepIndex);
+        this.state.stepIndex = this.state.stepIndex+1;
         this.setState({
-            stepIndex: stepIndex + 1,
-            finished: stepIndex >= 1,
+            //stepIndex: this.state.stepIndex + 1,
+            finished: this.state.stepIndex >= 1,
         });
-        console.log("next currIndex" + { stepIndex } + "-- " + this.state.stepIndex);
+        console.log("next currIndex-- " + this.state.stepIndex);
     };
 
 
@@ -511,7 +513,7 @@ class Checkout extends Component {
                     onClick={this.handleNext}
                     className={classes.button}
                 >
-                    {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
+                    {this.state.stepIndex === 1 ? 'Finish' : 'Next'}
                 </Button>
             </div>  
         );
@@ -526,7 +528,7 @@ class Checkout extends Component {
         
         return (
         <div>
-            <Stepper active={stepIndex} orientation="vertical">
+            <Stepper active={this.state.stepIndex} orientation="vertical">
                 <Step>
                     <StepLabel>Delivery</StepLabel>
                     <StepContent>
@@ -637,13 +639,14 @@ class Checkout extends Component {
                                     {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
                                 </Button> */}
 
-                                {this.renderStepActions(0)}
+                               
                             </div>
                         </div>{/*
                         <div className={classes.actionsContainer}>
                             <StepButton children="Payment" className={classes.button}>NEXT</StepButton>
                             <StepButton children="Back" className={classes.button}>BACK</StepButton>
                         </div>*/}
+                            {this.renderStepActions(0)}
                     </StepContent>
 
                 </Step>
@@ -660,9 +663,9 @@ class Checkout extends Component {
                                     )
                                 }
                             </RadioGroup>
-                            {this.renderStepActions(1)}
+                            
                         </FormControl>
-
+                            {this.renderStepActions(1)}
                     </StepContent>
                 </Step>
             </Stepper>
