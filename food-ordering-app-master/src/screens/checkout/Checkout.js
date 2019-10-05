@@ -424,14 +424,16 @@ class Checkout extends Component {
     }
 
     saveAddressClickHandler = () => {
+        console.log("inside saveAddressClickHandler");
         this.state.flatNo === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
         this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
         this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
-        this.state.statesList === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
+        this.state.state_uuid === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
         this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
 
-        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { return; }
-
+        console.log("1st check");
+        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { console.log("Exception");return; }
+        console.log("af 1st check");
         this.props.history.push({
             pathname: '/confirm/' + this.props.match.params.id,
             bookingSummary: this.state
@@ -445,6 +447,7 @@ class Checkout extends Component {
             "pincode": this.state.pincode,
             "state_uuid": this.state.state_uuid
         });
+        console.log("SaveAddress Data" + saveAddressData);
         let xhrSaveAddress = new XMLHttpRequest();
         let that = this;
         xhrSaveAddress.addEventListener("readystatechange", function () {
@@ -575,7 +578,8 @@ class Checkout extends Component {
                         }
 
                         {this.state.value === 1 &&
-                            <TabContainer>
+                                <TabContainer>
+                                <br/>
                                 <FormControl required>
                                     <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
                                     <Input id="flatNo" type="text" flatNo={this.state.flatNo} onChange={this.inputFlatNoChangeHandler} />
@@ -634,7 +638,7 @@ class Checkout extends Component {
                                     </FormControl>
                                 }
                                 <br />
-                                <Button variant="contained" color="secondary" onClick={()=>this.saveAddressClickHandler()}>SAVE ADDRESS</Button>
+                                <Button variant="contained" color="secondary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
                             </TabContainer>
                         }
                         <div className={classes.actionsContainer}>
