@@ -342,9 +342,12 @@ class Checkout extends Component {
 
     handleReset = () => {
         const { stepIndex } = this.state;
+        console.log("in handlerReset"+stepIndex);
         if (stepIndex > 0) {
             this.setState({ stepIndex: 0});
         }
+        console.log("after handlerReset" + this.state.stepIndex);
+        
     };
 
     getPaymentMethods = () => {
