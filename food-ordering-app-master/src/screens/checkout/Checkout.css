@@ -6,3 +6,12 @@
     flex-wrap: nowrap;
     width: 100%;
 }
+.tickIcon {
+    color: none;
+}
+.tickIcon:hover {
+    color: green;
+}
+.tickIcon:active {
+    color: green;
+}

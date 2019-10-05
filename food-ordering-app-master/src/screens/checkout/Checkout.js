@@ -26,6 +26,8 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import { StepButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import IconButton from '@material-ui/core/IconButton';
 /*import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';*/
 
@@ -268,7 +270,7 @@ class Checkout extends Component {
     constructor() {
         super();
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiNTI3ZGZlOC1iZGQ1LTRiMDctOTg2Yy00NTNjOTAwNmE0M2QiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDIzNCwiaWF0IjoxNTcwMjA2fQ.eDevtNqqBJdwk3ENLkA-oOHnJUiN_DNILzpLrF9ow5OBjtrley_fdOR1SC288Aq08ZzDbJKsN2RZO2Babt9B5w");
+        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiMmIyMjg4My03NjE5LTRlZWUtODY2OS1kMWFkYjIyODc5OWUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDMwNywiaWF0IjoxNTcwMjc4fQ.YrYzZ4rCxZjIPwARn2ESpcaTWAp00Ca97jkR6CYyvNa9l4S_ez1ScHR9OA9nFhYGSWbkTvCBhm0lWaQIPCQoVg");
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -560,8 +562,11 @@ class Checkout extends Component {
                                         <div>{address.city}</div>
                                         <div>{address.state.state_name}</div>
                                         <div>{address.pincode}</div>
-                                            
-                                        </GridListTile>
+                                        <IconButton style={{ float: "right" }}>
+                                            <CheckCircleIcon className="tickIcon" />
+                                        </IconButton>
+                                    </GridListTile>
+                                    
                                     ))}
                             </GridList>
                             <div>{this.state.message}</div>
