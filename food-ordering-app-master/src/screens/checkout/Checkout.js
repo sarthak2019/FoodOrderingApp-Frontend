@@ -26,6 +26,9 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import { StepButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
+/*import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';*/
+
 
 
 
@@ -43,25 +46,47 @@ const useStyles = makeStyles(theme => ({
     resetContainer: {
         padding: theme.spacing(3),
     },
+    gridList: {
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+    },
 }));
 
 const classes = useStyles;
-const activeStep = 0;
-const setActiveStep = 0;
-const steps = 0;
+/*let activeStep = 0;
+let setActiveStep = 0;
+let steps = 0;*/
 //const steps = getSteps();
+
+
+
+
+/*handlePrev = () => {
+    const { stepIndex } = this.state;
+    if (stepIndex > 0) {
+        this.setState({ stepIndex: stepIndex - 1 });
+    }
+};
 
 const handleNext = () => {
     //setActiveStep(prevActiveStep => prevActiveStep + 1);
+    console.log("next");
     setActiveStep = activeStep + 1;
+    //this.setState(setActiveStep) = this.state.activeStep + 1;
+    //console.log("End next" + this.state.setActiveStep);
+};
+*/
+const handleBack = () => {
+    console.log("back");
+    //setActiveStep(prevActiveStep => prevActiveStep - 1);
 };
 
-const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
-};
+
 
 const handleReset = () => {
-    setActiveStep(0);
+    console.log("Reset");
+    //setActiveStep(0);
 };
 const TabContainer = function (props) {
     return (
@@ -239,11 +264,11 @@ const VerticalStepper= ()=> {
 */
 
 class Checkout extends Component {
-
+    
     constructor() {
         super();
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiI5YWYzZjAzNC1lODM2LTRmNTMtYjY5YS04NjU3MDEzYmU4YzIiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDAwOSwiaWF0IjoxNTY5OTgwfQ.UC43UmvS2wGbont3C9gdnIWWzXXrDZ0I-j1CxhhTVwTjscX21vSY3bbcKG8DOgiPDmkE_ZZSxXdtN5GDrN9QCA");
+        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiNTI3ZGZlOC1iZGQ1LTRiMDctOTg2Yy00NTNjOTAwNmE0M2QiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDIzNCwiaWF0IjoxNTcwMjA2fQ.eDevtNqqBJdwk3ENLkA-oOHnJUiN_DNILzpLrF9ow5OBjtrley_fdOR1SC288Aq08ZzDbJKsN2RZO2Babt9B5w");
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -262,6 +287,8 @@ class Checkout extends Component {
             paymentMethods: [],
             addressList: [],
             message: null,
+            stepIndex: 0,
+            finished: false,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
         
@@ -280,8 +307,35 @@ class Checkout extends Component {
     }
 
     statesChangeHandler = event => {
+        console.log("state changed");
         this.setState({ state_uuid: event.target.value });
     }
+
+    /*
+    handleNext = () => {
+        const { currIndex } = this.state.stepIndex;
+        if ({ currIndex} < 2) {
+            this.setState({ stepIndex: currIndex + 1 });
+        }
+        console.log("next currIndex" + { currIndex }+"-- "+ this.state.stepIndex);
+    };*/
+
+    handleNext = () => {
+        const { stepIndex } = this.state;
+        this.setState({
+            stepIndex: stepIndex + 1,
+            finished: stepIndex >= 1,
+        });
+        console.log("next currIndex" + { stepIndex } + "-- " + this.state.stepIndex);
+    };
+
+
+    handlePrev = () => {
+        const { stepIndex } = this.state;
+        if (stepIndex > 0) {
+            this.setState({ stepIndex: stepIndex - 1 });
+        }
+    };
 
     getPaymentMethods = () => {
 
@@ -381,18 +435,19 @@ class Checkout extends Component {
         let that = this;
         xhrSaveAddress.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
-                sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
+                //sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+                //sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
                 that.setState({
                     saveAddress: true,
                 });
 
             }
         });
-        
-        let url = `${constants.addressUrl}`;
+
+        let url = `${constants.saveAddressUrl}`;
         xhrSaveAddress.open("POST", url);
-        xhrSaveAddress.setRequestHeader("authorization", "Basic " + window.btoa(this.state.username + ":" + this.state.loginPassword));
+        //xhrSaveAddress.setRequestHeader("authorization", "Bearer " + window.btoa(this.state.username + ":" + this.state.loginPassword));
+        xhrSaveAddress.setRequestHeader("authorization", "Bearer eyJraWQiOiI5YWYzZjAzNC1lODM2LTRmNTMtYjY5YS04NjU3MDEzYmU4YzIiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDAwOSwiaWF0IjoxNTY5OTgwfQ.UC43UmvS2wGbont3C9gdnIWWzXXrDZ0I-j1CxhhTVwTjscX21vSY3bbcKG8DOgiPDmkE_ZZSxXdtN5GDrN9QCA");
         xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
         xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
         
@@ -419,11 +474,59 @@ class Checkout extends Component {
         });*/
     }
 
-    
+    renderStepActions(step) {
+        const { stepIndex } = this.state;
+        const steps = 2;   
+        return (
+            <div style={{ margin: '12px 0' }}>
+                {/* <Button
+                    label={stepIndex === 1  ? 'FINE' : 'Ne'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onClick={this.handleNext}
+                    style={{ marginRight: 12 }}
+                />
+                {step > 0 && (
+                    <Button
+                        label="Back"
+                        disabled={stepIndex === 0}
+                        disableTouchRipple={true}
+                        disableFocusRipple={true}
+                        onClick={this.handlePrev}
+                    />
+                )} 
+
+               */}
+                <Button
+                    disabled={this.state.stepIndex === 0}
+                    onClick={this.handlePrev}
+                    className={classes.button}
+                >
+                    Back
+                  </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.handleNext}
+                    className={classes.button}
+                >
+                    {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
+                </Button>
+            </div>  
+        );
+    }
+
+
     render() {
         //return (<VerticalStepper/>);
+        const { stepIndex, finished } = this.state;
+        console.log("const" + { stepIndex });
+        const steps = 2;
+        
         return (
-            <Stepper orientation="vertical">
+        <div>
+            <Stepper active={stepIndex} orientation="vertical">
                 <Step>
                     <StepLabel>Delivery</StepLabel>
                     <StepContent>
@@ -435,10 +538,10 @@ class Checkout extends Component {
                         </Typography>
                         {this.state.value === 0 &&
                             <TabContainer>
-                            <GridList cellHeight={160} cols={2} >
+                            <GridList cols={3} className="gridListUpcomingMovies">
                                 {this.state.addressList != null && this.state.addressList.map(address => (
-                                        <GridListTile
-                                            className="gridTile"
+                                    <GridListTile
+                                        className="gridTile"
                                         key={address.id}>
                                         <div>{address.flat_building_name}</div>
                                         <div>{address.locality}</div>
@@ -481,8 +584,8 @@ class Checkout extends Component {
                                 <br />
                                 <FormControl required>
                                     <InputLabel htmlFor="stateList">State</InputLabel>
-                                    <Select
-                                        value={this.state.statesList}
+                                <Select
+                                    value={this.state.state_uuid}
                                         onChange={this.statesChangeHandler}
                                     >
                                         {this.state.statesList.map(st => (
@@ -513,13 +616,13 @@ class Checkout extends Component {
                                     </FormControl>
                                 }
                                 <br />
-                                <Button variant="contained" color="primary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
+                                <Button variant="contained" color="primary" onClick={()=>this.saveAddressClickHandler()}>SAVE ADDRESS</Button>
                             </TabContainer>
                         }
                         <div className={classes.actionsContainer}>
                             <div>
-                                <Button
-                                    disabled={activeStep === 0}
+                                {/* <Button
+                                    disabled={this.state.stepIndex === 0}
                                     onClick={handleBack}
                                     className={classes.button}
                                 >
@@ -528,11 +631,13 @@ class Checkout extends Component {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={handleNext}
+                                    onClick={this.handleNext}
                                     className={classes.button}
                                 >
-                                    {activeStep === steps - 1 ? 'Finish' : 'Next'}
-                                </Button>
+                                    {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
+                                </Button> */}
+
+                                {this.renderStepActions(0)}
                             </div>
                         </div>{/*
                         <div className={classes.actionsContainer}>
@@ -555,11 +660,23 @@ class Checkout extends Component {
                                     )
                                 }
                             </RadioGroup>
+                            {this.renderStepActions(1)}
                         </FormControl>
+
                     </StepContent>
                 </Step>
             </Stepper>
-
+            { finished  && (
+            <Paper square elevation={0} className={classes.resetContainer}>
+                <Typography><b> View the summary & place your order now!</b></Typography>
+                <Button onClick={handleReset} className={classes.button}>
+                    CHANGE
+          </Button>
+                    </Paper>
+        
+            )
+            }
+         </div>
         );
     };
 }
