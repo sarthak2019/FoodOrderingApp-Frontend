@@ -6,9 +6,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import StarIcon from '@material-ui/icons/Star';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Modal from 'react-modal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -19,7 +16,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
 import MenuItem from "@material-ui/core/MenuItem";
 import Popover from "@material-ui/core/Popover";
-import Profile from '../screens/profile/Profile';
 
 
 const customStyles = {
@@ -48,7 +44,6 @@ class Header extends Component {
 
         this.state = {
             modalIsOpen: false,
-            data: [],
             search: "",
             message: null,
             value: 0,
@@ -107,7 +102,7 @@ class Header extends Component {
                             placeholder="Search by Restaurant Name" onChange={this.searchChangeHandler}>
                         </Input>
                     </span>)}
-                    {screen != "Home" && (<span style={{ width: "33%" }}></span>)}
+                    {screen !== "Home" && (<span style={{ width: "33%" }}></span>)}
                     <span style={{ width: "33%", textAlign: "right" }}>
                         {this.state.loggedIn === false && <Button variant="contained" onClick={this.openModalHandler} color="default">
                             <AccountCircleIcon></AccountCircleIcon>
@@ -147,34 +142,6 @@ class Header extends Component {
 
 
                 </header>
-                <div className="card-details">
-                    {(this.state.data !== null) && (this.state.data !== undefined) ?
-                        (this.state.data.map(restaurant => (
-
-                            <Card key={restaurant.id} style={{ align: 'left', width: "25%" }}>
-                                <CardContent>
-                                    <div>
-                                        <img
-                                            style={{ height: '150px', width: '100%', align: 'left' }}
-                                            src={restaurant.photo_URL} alt="restaurant_picture"></img>
-                                        <div style={{ fontSize: "18px" }}>{restaurant.restaurant_name}</div>
-                                        <div>{restaurant.categories}</div>
-                                        <div className="card-details">
-                                            <span style={{ width: "45%", height: "40px", backgroundColor: "yellow", align: 'left' }}>
-                                                <StarIcon></StarIcon>&nbsp;&nbsp;{restaurant.customer_rating}&nbsp;&nbsp;({restaurant.number_customers_rated})
-                                        </span>
-                                            <span style={{ width: "45%", align: 'right' }}>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x20b9; {restaurant.average_price} for two
-                                        </span>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))) : null
-
-                    }
-                    <div>{this.state.message}</div>
-                </div>
                 <Modal
                     ariaHideApp={false}
                     isOpen={this.state.modalIsOpen}
@@ -282,34 +249,6 @@ class Header extends Component {
             </div>
         )
 
-    }
-
-    getRestaurantData = (restaurantName) => {
-        let that = this;
-        let url = `${constants.findRestaurant}/${restaurantName}`;
-        console.log(restaurantName)
-        console.log(url)
-        return fetch(url, {
-            method: 'GET',
-        }).then((response) => {
-            return response.json();
-        }).then((jsonResponse) => {
-            if (jsonResponse.restaurants === null) {
-                this.setState({ message: "No restaurant with the given name." })
-            }
-            if (jsonResponse.restaurants !== null) {
-                this.setState({ message: null })
-            }
-            that.setState({
-                data: jsonResponse.restaurants
-            });
-            this.props.restaurantsData();
-
-        }).catch((error) => {
-            console.log('error restaurant data', error);
-            // this.props.restaurantsData();
-        });
-        
     }
 
     searchChangeHandler = (e) => {
