@@ -551,7 +551,8 @@ class Checkout extends Component {
                             </Tabs>
                         </Typography>
                         {this.state.value === 0 &&
-                            <TabContainer>
+                                <TabContainer>
+                                <br/>
                             <GridList cols={3} className="gridListUpcomingMovies">
                                 {this.state.addressList != null && this.state.addressList.map(address => (
                                     <GridListTile
