@@ -26,6 +26,9 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import { StepButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
+/*import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';*/
+
 
 
 
@@ -327,6 +330,13 @@ class Checkout extends Component {
     };
 
 
+    handlePrev = () => {
+        const { stepIndex } = this.state;
+        if (stepIndex > 0) {
+            this.setState({ stepIndex: stepIndex - 1 });
+        }
+    };
+
     getPaymentMethods = () => {
 
         let that = this;
@@ -464,7 +474,50 @@ class Checkout extends Component {
         });*/
     }
 
-    
+    renderStepActions(step) {
+        const { stepIndex } = this.state;
+        const steps = 2;   
+        return (
+            <div style={{ margin: '12px 0' }}>
+                {/* <Button
+                    label={stepIndex === 1  ? 'FINE' : 'Ne'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onClick={this.handleNext}
+                    style={{ marginRight: 12 }}
+                />
+                {step > 0 && (
+                    <Button
+                        label="Back"
+                        disabled={stepIndex === 0}
+                        disableTouchRipple={true}
+                        disableFocusRipple={true}
+                        onClick={this.handlePrev}
+                    />
+                )} 
+
+               */}
+                <Button
+                    disabled={this.state.stepIndex === 0}
+                    onClick={this.handlePrev}
+                    className={classes.button}
+                >
+                    Back
+                  </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.handleNext}
+                    className={classes.button}
+                >
+                    {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
+                </Button>
+            </div>  
+        );
+    }
+
+
     render() {
         //return (<VerticalStepper/>);
         const { stepIndex, finished } = this.state;
@@ -472,6 +525,7 @@ class Checkout extends Component {
         const steps = 2;
         
         return (
+        <div>
             <Stepper active={stepIndex} orientation="vertical">
                 <Step>
                     <StepLabel>Delivery</StepLabel>
@@ -567,7 +621,7 @@ class Checkout extends Component {
                         }
                         <div className={classes.actionsContainer}>
                             <div>
-                                <Button
+                                {/* <Button
                                     disabled={this.state.stepIndex === 0}
                                     onClick={handleBack}
                                     className={classes.button}
@@ -581,7 +635,9 @@ class Checkout extends Component {
                                     className={classes.button}
                                 >
                                     {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
-                                </Button>
+                                </Button> */}
+
+                                {this.renderStepActions(0)}
                             </div>
                         </div>{/*
                         <div className={classes.actionsContainer}>
@@ -604,11 +660,23 @@ class Checkout extends Component {
                                     )
                                 }
                             </RadioGroup>
+                            {this.renderStepActions(1)}
                         </FormControl>
+
                     </StepContent>
                 </Step>
             </Stepper>
-
+            { finished  && (
+            <Paper square elevation={0} className={classes.resetContainer}>
+                <Typography><b> View the summary & place your order now!</b></Typography>
+                <Button onClick={handleReset} className={classes.button}>
+                    CHANGE
+          </Button>
+                    </Paper>
+        
+            )
+            }
+         </div>
         );
     };
 }
