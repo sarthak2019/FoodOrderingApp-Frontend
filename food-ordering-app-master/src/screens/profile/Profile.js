@@ -20,8 +20,8 @@ class Profile extends Component {
         return (
             <div>
                 <Header
-                    logoutHandler={this.logout}
-                    handleProfile={this.navigateToProfile} />
+                    screen={"Profile"}
+                    history={this.props.history} />
                 <div>First name: {this.state.first_name}<br />
                     Last name: {this.state.last_name}<br />
                     Email address: {this.state.email_address}<br />
@@ -31,14 +31,14 @@ class Profile extends Component {
         )
     }
 
-    logout = () => {
-        sessionStorage.clear();
-        this.props.history.replace('/');
-    }
+    // logout = () => {
+    //     sessionStorage.clear();
+    //     this.props.history.replace('/');
+    // }
 
-    navigateToProfile = () => {
-        this.props.history.push('/profile');
-    }
+    // navigateToProfile = () => {
+    //     this.props.history.push('/profile');
+    // }
 }
 
 export default Profile;
