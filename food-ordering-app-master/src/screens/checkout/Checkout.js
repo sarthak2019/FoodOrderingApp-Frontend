@@ -338,8 +338,7 @@ class Checkout extends Component {
             this.setState({ stepIndex: stepIndex - 1 });
         }
     };
-
-
+    
     handleReset = () => {
         const { stepIndex } = this.state;
         console.log("in handlerReset"+stepIndex);
