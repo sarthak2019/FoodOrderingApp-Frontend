@@ -285,6 +285,7 @@ class Checkout extends Component {
             addressList: [],
             message: null,
             stepIndex: 0,
+            finished: false,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
         
@@ -466,8 +467,10 @@ class Checkout extends Component {
     
     render() {
         //return (<VerticalStepper/>);
-        const { stepIndex } = this.state.stepIndex;
+        const { stepIndex, finished } = this.state;
+        console.log("const" + { stepIndex });
         const steps = 2;
+        
         return (
             <Stepper active={stepIndex} orientation="vertical">
                 <Step>
