@@ -33,7 +33,7 @@ class Home extends Component {
                     {(this.state.allrestaurantsData !== null) && (this.state.allrestaurantsData !== undefined) ?
                         (this.state.allrestaurantsData.map(restaurant => (
 
-                            <Card key={restaurant.id} style={{ align: 'left', width: "25%" }}>
+                            <Card key={restaurant.id} style={{ align: 'left', width: "25%", cursor: "pointer" }} onClick = {() => this.restaurantClickHandler(restaurant.id)}>
                                 <CardContent>
                                     <div>
                                         <img
@@ -108,6 +108,10 @@ class Home extends Component {
                 console.log('error restaurant data', error);
             });
         }
+    }
+
+    restaurantClickHandler = (restuaurantId) => {
+        
     }
 
     // logout = () => {
