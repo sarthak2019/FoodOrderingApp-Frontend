@@ -3,7 +3,8 @@ import { constants } from '../../common/utils';
 import { makeStyles } from '@material-ui/core/styles';
 import StarIcon from '@material-ui/icons/Star';
 import './Details.css';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import AddIcon from '@material-ui/icons/Add';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Card from '@material-ui/core/Card';
@@ -95,17 +96,12 @@ class Details extends Component {
                             ))}
                         </div>
                         <br />
-                        <StarIcon></StarIcon>&nbsp;&nbsp;{this.state.restaurant_customer_rating}
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&#x20b9;</b>{this.state.restaurant_number_customers_rated}</span>
-                        <div>
-                            <span>AVERGAE RATING BY {this.state.restaurant_number_customers_rated} CUSTOMERS</span>
+                        <div className="restaurant-details"><div className="restaurant-details"><span><StarIcon></StarIcon>&nbsp;&nbsp;{this.state.restaurant_customer_rating}</span><span><b>&#x20b9;</b>{this.state.restaurant_number_customers_rated}</span></div>
+                            <div style={{ align: "left" }}>AVERGAE RATING BY {this.state.restaurant_number_customers_rated} CUSTOMERS</div>
 
-                            <span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AVERAGE COST FOR TWO PEOPLE</span>
-                        </div>
+                            <div style={{ align: "right" }}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AVERAGE COST FOR TWO PEOPLE</div></div>
+                        
                     </div>
                 </div>
 
@@ -120,11 +116,11 @@ class Details extends Component {
                                     <div className="item-details">
 
                                         {item.item_type === "NON_VEG" && <span id="non_veg" style={{ float: "left", width: "25%" }}>
-                                            <FiberManualRecordIcon style={{ color: "red" }}></FiberManualRecordIcon>
+                                            <FontAwesomeIcon icon={faCircle} style={{ color: "red" }}></FontAwesomeIcon>
                                         </span>}
 
                                         {item.item_type === "VEG" && <span id="veg" style={{ float: "left", width: "25%" }}>
-                                            <FiberManualRecordIcon style={{ color: "green" }}></FiberManualRecordIcon>
+                                        <FontAwesomeIcon icon={faCircle} style={{ color: "green" }}></FontAwesomeIcon>
                                         </span>}
 
                                         <span style={{ float: "left", width: "25%" }}>
@@ -153,7 +149,8 @@ class Details extends Component {
                                 <div>
                                     {this.state.state_items_list.map(it => (
                                         <div className="item-details" key={it.id}>
-                                            <span style={{ align: 'left', width: "33%" }}>{it.name}</span>
+                                            <span style={{ align: 'left', width: "11%" }}>{it.item_type === "VEG" ? (<FontAwesomeIcon icon={faCircle} style={{ color: "green" }}></FontAwesomeIcon>) : (<FontAwesomeIcon icon={faCircle} style={{ color: "red" }}></FontAwesomeIcon>)}</span>
+                                            <span style={{ align: 'left', width: "22%" }}>{it.name}</span>
                                             <span style={{ align: 'left', width: "11%" }}>
                                                 <RemoveIcon style={{ cursor: "pointer" }} onClick={() => this.onItemRemoveClicked(it)}></RemoveIcon>
                                             </span>
@@ -161,7 +158,7 @@ class Details extends Component {
                                             <span style={{ align: 'left', width: "11%" }}>
                                                 <AddIcon style={{ cursor: "pointer" }} onClick={() => this.onItemAddClicked(it)}></AddIcon>
                                             </span>
-                                            <span style={{ align: 'left', width: "33%" }}>{it.price}</span>
+                                            <span style={{ align: 'left', width: "33%" }}>&#x20b9;&nbsp;{it.price}</span>
                                         </div>
                                     ))}
                                 </div>,

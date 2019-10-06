@@ -5,6 +5,7 @@ import Header from '../../common/header/Header';
 import StarIcon from '@material-ui/icons/Star';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+// import { FaCircle } from 'react-icons/fa';
 
 class Home extends Component {
     constructor(props) {
