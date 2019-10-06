@@ -579,7 +579,7 @@ class Checkout extends Component {
                                     </div>
                                     
                                 ))}
-                            </div>,
+                            </div>
                             <div>
                                 <span>
                                     <FormControl>
@@ -597,7 +597,7 @@ class Checkout extends Component {
                                         </div>
                                     }
                                 </span>
-                            </div>,
+                            </div>
                             <div className="item-details">
                                 <Divider variant="middle" />
                                 <span style={{ align: 'left', width: "50%" }}><b>NET AMOUNT</b></span>
