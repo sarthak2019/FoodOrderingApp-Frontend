@@ -344,7 +344,8 @@ class Details extends Component {
     };
 
     onItemCheckoutClicked = () => {
-
+        
+        this.props.history.push('/checkout');
     }
 
 

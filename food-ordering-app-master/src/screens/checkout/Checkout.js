@@ -31,6 +31,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
+import Header from '../../common/Header';
 
 
 
@@ -267,10 +268,13 @@ const VerticalStepper= ()=> {
 
 class Checkout extends Component {
     
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiMmIyMjg4My03NjE5LTRlZWUtODY2OS1kMWFkYjIyODc5OWUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDMwNywiaWF0IjoxNTcwMjc4fQ.YrYzZ4rCxZjIPwARn2ESpcaTWAp00Ca97jkR6CYyvNa9l4S_ez1ScHR9OA9nFhYGSWbkTvCBhm0lWaQIPCQoVg");
+        //sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiMmIyMjg4My03NjE5LTRlZWUtODY2OS1kMWFkYjIyODc5OWUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDMwNywiaWF0IjoxNTcwMjc4fQ.YrYzZ4rCxZjIPwARn2ESpcaTWAp00Ca97jkR6CYyvNa9l4S_ez1ScHR9OA9nFhYGSWbkTvCBhm0lWaQIPCQoVg");
+        if (sessionStorage.getItem('access-token') == null) {
+            props.history.replace('/');
+        }
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -412,11 +416,11 @@ class Checkout extends Component {
     getExistingAddress = () => {
         let that = this;
         let url = `${constants.addressUrl}`;
-        console.log("In Address get" + url + " token" + sessionStorage.getItem("authorization"));
+        console.log("In Address get" + url + " token" + sessionStorage.getItem("access-token"));
         return fetch(url, {
             method: 'GET',
             headers: {
-                'authorization': sessionStorage.getItem("authorization")
+                'authorization': 'Bearer ' + sessionStorage.getItem("access-token")
             }
         }).then((response) => {
             console.log("In address then" + JSON.stringify(response));
@@ -495,7 +499,7 @@ class Checkout extends Component {
 
         xhrSaveAddress.open("POST", url);
         //xhrSaveAddress.setRequestHeader("authorization", "Bearer " + window.btoa(this.state.username + ":" + this.state.loginPassword));
-        xhrSaveAddress.setRequestHeader("authorization", sessionStorage.getItem("authorization"));
+        xhrSaveAddress.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
         xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
         xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
         
@@ -569,12 +573,16 @@ class Checkout extends Component {
     render() {
         //return (<VerticalStepper/>);
         const { stepIndex, finished } = this.state;
+        const { state_items_list } = this.props;
         console.log("const" + { stepIndex });
         const steps = 2;
         
         return (
         <div>
-            <Stepper active={this.state.stepIndex} orientation="vertical">
+            <Header
+                    screen={"Checkout"}
+                    history={this.props.history} />
+            <Stepper activeStep={this.state.stepIndex} orientation="vertical">
                 <Step>
                     <StepLabel>Delivery</StepLabel>
                     <StepContent>
