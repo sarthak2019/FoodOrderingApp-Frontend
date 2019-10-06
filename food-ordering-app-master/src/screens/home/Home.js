@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Home.css';
 import { constants } from '../../common/utils';
-import Header from '../../common/Header';
+import Header from '../../common/header/Header';
 import StarIcon from '@material-ui/icons/Star';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';

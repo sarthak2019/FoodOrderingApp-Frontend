@@ -31,7 +31,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
-import Header from '../../common/Header';
+import Header from '../../common/header/Header';
 
 
 
@@ -573,8 +573,8 @@ class Checkout extends Component {
     render() {
         //return (<VerticalStepper/>);
         const { stepIndex, finished } = this.state;
-        const { state_items_list } = this.props;
         console.log("const" + { stepIndex });
+        console.log( this.props.location.state.items_list_new );
         const steps = 2;
         
         return (
