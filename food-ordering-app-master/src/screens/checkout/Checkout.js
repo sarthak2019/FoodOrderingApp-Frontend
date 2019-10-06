@@ -31,7 +31,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
-
+import Header from '../../common/header/Header';
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,32 +64,6 @@ let steps = 0;*/
 
 
 
-/*handlePrev = () => {
-    const { stepIndex } = this.state;
-    if (stepIndex > 0) {
-        this.setState({ stepIndex: stepIndex - 1 });
-    }
-};
-
-const handleNext = () => {
-    //setActiveStep(prevActiveStep => prevActiveStep + 1);
-    console.log("next");
-    setActiveStep = activeStep + 1;
-    //this.setState(setActiveStep) = this.state.activeStep + 1;
-    //console.log("End next" + this.state.setActiveStep);
-};
-*/
-const handleBack = () => {
-    console.log("back");
-    //setActiveStep(prevActiveStep => prevActiveStep - 1);
-};
-
-
-
-const handleReset = () => {
-    console.log("Reset");
-    //setActiveStep(0);
-};
 const TabContainer = function (props) {
     return (
         <Typography component="div" style={{ padding: 0, textAlign: 'left' }}>
@@ -102,175 +76,18 @@ TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 }
 
-/*
-function getSteps() {
-    return ['Delivery', 'Payment'];
-} 
 
-
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return (<div>
-                <Tabs className="tabs" >
-                    <Tab label="EXISTING ADDRESS" />
-                    <Tab label="NEW ADDRESS" />
-                </Tabs>
-            </div>);
-        case 1:
-
-            let that = this;
-            let url = `${constants.paymentMethodUrl}`;
-            fetch(url, {
-                method: 'GET',
-            }).then((response) => {
-                console.log(response.json());
-                return response.json();
-            }).then((jsonResponse) => {
-                that.setState({
-                    paymentMethods: jsonResponse.data
-                });
-            }).catch((error) => {
-                console.log('error user data', error);
-            });
-            return (
-               
-                <div>
-                    <FormControl>
-                        <FormLabel>Select Mode of Payment</FormLabel>
-                    
-                    <RadioGroup id="paymentMethods" name="customized-radios">
-                            <Radio id="cod" name="cash" value="COD" checked={false}> COD </Radio>
-                        </RadioGroup>
-                    </FormControl>
-            </div>);
-            
-        default:
-            return 'Unknown step';
-    }
-}
-
-
-
-//export default function Checkout() {
-const VerticalStepper= ()=> {
-    const classes = useStyles();
-    const [activeStep, setActiveStep] = React.useState(0);
-    const steps = getSteps();
-
-    const handleNext = () => {
-        setActiveStep(prevActiveStep => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep(prevActiveStep => prevActiveStep - 1);
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
-    };
-
-    /*
-    return (
-        <div className={classes.root}>
-            <Stepper activeStep={activeStep} orientation="vertical">
-                    <Step >
-                        <StepLabel>Delivery</StepLabel>
-                        <StepContent>
-                        <Typography>
-                            <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
-                            <Tab label="EXISTING ADDRESS" />
-                            <Tab label="NEW ADDRESS" />
-                            </Tabs>
-                        </Typography>
-                            <div className={classes.actionsContainer}>
-                                <div>
-                                    <Button
-                                        disabled={activeStep === 0}
-                                        onClick={handleBack}
-                                        className={classes.button}
-                                    >
-                                        Back
-                  </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleNext}
-                                        className={classes.button}
-                                    >
-                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                    </Button>
-                                </div>
-                            </div>
-                        </StepContent>
-                    </Step>
-             
-            </Stepper>
-            {activeStep === steps.length && (
-                <Paper square elevation={0} className={classes.resetContainer}>
-                    <Typography><b> View the summary & place your order now!</b></Typography>
-                    <Button onClick={handleReset} className={classes.button}>
-                        CHANGE
-          </Button>
-                </Paper>
-            )}
-        </div>
-    );
-    */
-
-/*
-    return (
-        <div className={classes.root}>
-            <Stepper activeStep={activeStep} orientation="vertical">
-                {steps.map((label, index) => (
-                    <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
-                        <StepContent>
-                            <Typography>{getStepContent(index)}</Typography>
-                            <div className={classes.actionsContainer}>
-                                <div>
-                                    <Button
-                                        disabled={activeStep === 0}
-                                        onClick={handleBack}
-                                        className={classes.button}
-                                    >
-                                        Back
-                  </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleNext}
-                                        className={classes.button}
-                                    >
-                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                    </Button>
-                                </div>
-                            </div>
-                        </StepContent>
-                    </Step>
-                ))}
-            </Stepper>
-            {activeStep === steps.length && (
-                <Paper square elevation={0} className={classes.resetContainer}>
-                    <Typography><b> View the summary & place your order now!</b></Typography>
-                    <Button onClick={handleReset} className={classes.button}>
-                        CHANGE
-          </Button>
-                </Paper>
-            )}
-        </div>
-    );
-     
-
-}
-*/
 
 class Checkout extends Component {
     
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiMmIyMjg4My03NjE5LTRlZWUtODY2OS1kMWFkYjIyODc5OWUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDMwNywiaWF0IjoxNTcwMjc4fQ.YrYzZ4rCxZjIPwARn2ESpcaTWAp00Ca97jkR6CYyvNa9l4S_ez1ScHR9OA9nFhYGSWbkTvCBhm0lWaQIPCQoVg");
+        //sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJkMWVmZWMwNS0yYzdkLTRhMjMtYjhlNC05NGQ1ZWFmZmI0ZjkiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDM3MSwiaWF0IjoxNTcwMzQzfQ.61W_BZueQ2OmaQKYYZmnuot-pC2l1hEG1TAMPU5NNvs5xtApm-eTPbeR00LA2YEPOd97rw-nlkfXcP6t6sH0yw");
+        if (sessionStorage.getItem('access-token') == null) {
+            props.history.replace('/');
+        }
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -291,14 +108,21 @@ class Checkout extends Component {
             message: null,
             stepIndex: 0,
             finished: false,
-            snackOpen:false,
+            snackOpen: false,
+            state_items_list: [],
+            couponCode: "",
+            couponError: "dispNone",
+            percent: 0,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
-        
+
         this.getExistingAddress();
         this.getPaymentMethods();
         this.getStatesList();
-        
+        if (this.props.location.state.items_list_new != null || this.props.location.state.items_list_new !== '') {
+            console.log("Fetch props and set part4");
+            this.setState({ state_items_list: this.props.location.state.items_list_new });
+        }
     }
     /*
     componentDidMount() {
@@ -326,16 +150,9 @@ class Checkout extends Component {
     inputLocalityChangeHandler = (e) => {
         this.setState({ locality: e.target.value });
     }
-
-
-    /*
-    handleNext = () => {
-        const { currIndex } = this.state.stepIndex;
-        if ({ currIndex} < 2) {
-            this.setState({ stepIndex: currIndex + 1 });
-        }
-        console.log("next currIndex" + { currIndex }+"-- "+ this.state.stepIndex);
-    };*/
+    inputCouponCodeChangeHandler = (e) => {
+        this.setState({ couponCode: e.target.value });
+    }
 
     handleNext = () => {
         //const { stepIndex } = this.state;
@@ -346,6 +163,7 @@ class Checkout extends Component {
             finished: this.state.stepIndex >= 1,
         });
         console.log("next currIndex-- " + this.state.stepIndex);
+        console.log("Fetch props" + JSON.stringify(this.props));
     };
 
 
@@ -412,11 +230,13 @@ class Checkout extends Component {
     getExistingAddress = () => {
         let that = this;
         let url = `${constants.addressUrl}`;
-        console.log("In Address get" + url + " token" + sessionStorage.getItem("authorization"));
+        //console.log("In Address get" + url + " token" + sessionStorage.getItem("authorization"));
+        console.log("In Address get" + url + " token" + sessionStorage.getItem("access-token"));
         return fetch(url, {
             method: 'GET',
             headers: {
-                'authorization': sessionStorage.getItem("authorization")
+                //'authorization': sessionStorage.getItem("authorization")
+                'authorization': 'Bearer '+ sessionStorage.getItem("access-token")
             }
         }).then((response) => {
             console.log("In address then" + JSON.stringify(response));
@@ -494,8 +314,8 @@ class Checkout extends Component {
         console.log("In SaveAddress post" + url);
 
         xhrSaveAddress.open("POST", url);
-        //xhrSaveAddress.setRequestHeader("authorization", "Bearer " + window.btoa(this.state.username + ":" + this.state.loginPassword));
-        xhrSaveAddress.setRequestHeader("authorization", sessionStorage.getItem("authorization"));
+        //xhrSaveAddress.setRequestHeader("authorization", sessionStorage.getItem("authorization"));
+        xhrSaveAddress.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
         xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
         xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
         
@@ -520,6 +340,40 @@ class Checkout extends Component {
         }).catch((error) => {
             console.log('error saving Address', error);
         });*/
+            
+        //}
+    }
+
+    applyCouponCodeClickHandler = () => {
+        let value = this.state.couponCode;
+        console.log("in CouponCHange" + value);
+        if (value !== null || value !== "") {
+            let that = this;
+            let url = `${constants.couponUrl}/${value}`;
+            console.log("couponUrl" + url);
+            return fetch(url, {
+                method: 'GET',
+                headers: {
+                   'authorization': 'Bearer ' + sessionStorage.getItem("access-token")
+                }
+            }).then((response) => {
+                return response.json();
+            }).then((jsonResponse) => {
+                console.log("coup resp" + JSON.stringify(jsonResponse));
+                if (jsonResponse.coupon === null) {
+                    this.setState({ message: "No restaurant with the given name." })
+                }
+                if (jsonResponse.coupon !== null) {
+                    this.setState({ message: null })
+                }
+                that.setState({
+                    percent: jsonResponse.percent
+                });
+
+            }).catch((error) => {
+                console.log('error coupon data', error);
+            });
+        }
     }
 
     renderStepActions(step) {
@@ -569,12 +423,18 @@ class Checkout extends Component {
     render() {
         //return (<VerticalStepper/>);
         const { stepIndex, finished } = this.state;
+        const { state_items_list } = this.props.location.state.items_list_new;
+        console.log("props state_items_list" + state_items_list);
+        console.log("part3 page props" + JSON.stringify(this.props.location.state.items_list_new));
         console.log("const" + { stepIndex });
         const steps = 2;
         
         return (
         <div>
-            <Stepper active={this.state.stepIndex} orientation="vertical">
+                <Header
+                    screen={"Checkout"}
+                    history={this.props.history} />
+            <Stepper activeStep={this.state.stepIndex} orientation="vertical">
                 <Step>
                     <StepLabel>Delivery</StepLabel>
                     <StepContent>
@@ -749,8 +609,19 @@ class Checkout extends Component {
                                     </div>
                                 ))}
                             </div>,
-                            
-                                <div className="item-details">
+                            <div>
+                                <span>
+                                    <FormControl>
+                                        <InputLabel htmlFor="Coupon">Coupon Code</InputLabel>
+                                        <Input id="couponCode" type="text" couponCode={this.state.couponCode} onChange={this.inputCouponCodeChangeHandler} />
+                                        <FormHelperText className={this.state.couponError}>
+                                            <span className="red">required</span>
+                                        </FormHelperText>
+                                    </FormControl>
+                                    <Button className={classes.button} variant="contained" onClick={() => this.applyCouponCodeClickHandler()}>APPLY</Button>
+                                </span>
+                            </div>,
+                            <div className="item-details">
                                 <Divider variant="middle" />
                                 <span style={{ align: 'left', width: "50%" }}><b>NET AMOUNT</b></span>
                                 <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp;&nbsp;{this.state.total}</b></span>
