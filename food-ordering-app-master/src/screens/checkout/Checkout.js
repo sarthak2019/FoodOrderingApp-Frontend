@@ -32,6 +32,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import Header from '../../common/header/Header';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 
 const useStyles = makeStyles(theme => ({
@@ -105,7 +107,12 @@ class Checkout extends Component {
             percent: 0,
             newTotal: this.props.location.state.total,
             subTotal: 0,
-            discount:0,
+            discount: 0,
+            coupon_id: "",
+            saveOrder: false,
+            address_id: "",
+            payment_id: "",
+
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
 
@@ -214,6 +221,11 @@ class Checkout extends Component {
         }).catch((error) => {
             console.log('error fetching States List', error);
         });
+    }
+
+    addressClickHandler = (addressId) => {
+
+        this.setState({ address_id: addressId });
     }
 
     getExistingAddress = () => {
@@ -349,14 +361,15 @@ class Checkout extends Component {
                 return response.json();
             }).then((jsonResponse) => {
                 console.log("coup resp" + JSON.stringify(jsonResponse));
-                if (jsonResponse.coupon === null) {
+                if (jsonResponse.coupon_name === null) {
                     this.setState({ message: "No restaurant with the given name." })
                 }
-                if (jsonResponse.coupon !== null) {
+                if (jsonResponse.coupon_name !== null) {
                     this.setState({ message: null })
                 }
                 that.setState({
-                    percent: jsonResponse.percent
+                    percent: jsonResponse.percent,
+                    coupon_id: jsonResponse.id,
                 });
                 this.state.subTotal = this.props.location.state.total;
                 this.state.discount = (this.state.subTotal * this.state.percent) / 100;
@@ -367,6 +380,66 @@ class Checkout extends Component {
                 console.log('error coupon data', error);
             });
         }
+    }
+
+    onPlaceOrderClickHandler = () => {
+        console.log("inside onPlaceOrderClickHandler");
+        
+        console.log("1st check");
+        console.log("af 1st check");
+        /*this.props.history.push({
+            pathname: '/confirm/' + this.props.match.params.id,
+            bookingSummary: this.state
+        });*/
+
+        let saveOrderData = JSON.stringify({
+            "address_id": this.state.address_id,
+            "bill": this.state.newTotal,
+            "coupon_id": this.state.coupon_id,
+            "discount": this.state.discount,
+            "item_quantities": this.props.location.state.items_list_new,
+            "payment_id": this.state.payment_id,
+            "restaurant_id": this.state.restaurant_id
+        });
+        console.log("saveOrderData" + saveOrderData);
+        let xhrSaveOrder = new XMLHttpRequest();
+        let that = this;
+        xhrSaveOrder.addEventListener("readystatechange", function () {
+            if (this.readyState === 4 && this.status === 201) {
+                //sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+                //sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
+                that.setState({
+                    saveOrder: true,
+                    snackOpen: true
+                });
+                console.log("saveOrder success");
+            }
+            if (this.readyState === 4 && this.status === 400) {
+                that.setState({
+                    saveAddressErrordisp: "dispBlock",
+                    saveAddressErrormessage: JSON.parse(this.responseText).message
+                });
+                console.log("save error" + JSON.parse(this.responseText).message);
+            }
+            if (this.readyState === 4 && (this.status !== 400 && this.status !== 201)) {
+                that.setState({
+                    saveAddressErrordisp: "dispBlock",
+                    saveAddressErrormessage: JSON.parse(this.responseText).error
+                });
+                console.log("save error" + JSON.parse(this.responseText).error);
+            }
+        });
+
+        let url = `${constants.orderUrl}`;
+        console.log("In xhrSaveOrder post" + url);
+
+        xhrSaveOrder.open("POST", url);
+        //xhrSaveAddress.setRequestHeader("authorization", sessionStorage.getItem("authorization"));
+        xhrSaveOrder.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
+        xhrSaveOrder.setRequestHeader("Content-Type", "application/json");
+        xhrSaveOrder.setRequestHeader("Cache-Control", "no-cache");
+
+        xhrSaveOrder.send(saveOrderData);
     }
 
     renderStepActions(step) {
@@ -432,7 +505,7 @@ class Checkout extends Component {
                                         <div>{address.state.state_name}</div>
                                         <div>{address.pincode}</div>
                                         <IconButton style={{ float: "right" }}>
-                                            <CheckCircleIcon className="tickIcon" />
+                                            <CheckCircleIcon className="tickIcon" onClick={() => this.addressClickHandler(address.id)}/>
                                         </IconButton>
                                     </GridListTile>
                                     
@@ -538,8 +611,8 @@ class Checkout extends Component {
                             <FormLabel>Select Mode of Payment</FormLabel>
                             <RadioGroup column>
                                 {
-                                    this.state.paymentMethods.map(method => (
-                                        <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name} />
+                                        this.state.paymentMethods.map(method => (
+                                            <FormControlLabel key={"payment" + method.id} value={method.payment_name} control={<Radio name={method.payment_name} value={method.payment_name} />} label={method.payment_name} onClick={() => this.paymentMethodChangeHandler(method.payment_id)} />
                                     )
                                     )
                                 }
@@ -567,14 +640,11 @@ class Checkout extends Component {
                             <div>
                                 {this.props.location.state.items_list_new.map(it => (
                                     <div className="item-details" key={it.name}>
+                                        <span style={{ align: 'left', width: "11%" }}>{it.item_type === "VEG" ? (<FontAwesomeIcon icon={faCircle} style={{ color: "green" }}></FontAwesomeIcon>) : (<FontAwesomeIcon icon={faCircle} style={{ color: "red" }}></FontAwesomeIcon>)}</span>
                                         <span style={{ align: 'left', width: "33%" }}>{it.name}</span>
-                                        <span style={{ align: 'left', width: "11%" }}>
-                                            {/*<RemoveIcon style={{ cursor: "pointer" }} onClick={() => this.onItemRemoveClicked(it)}></RemoveIcon>*/}
-                                        </span>
+                                       
                                         <span style={{ align: 'left', width: "11%" }}>{it.count}</span>
-                                        <span style={{ align: 'left', width: "11%" }}>
-                                            {/*<AddIcon style={{ cursor: "pointer" }} onClick={() => this.onItemAddClicked(it)}></AddIcon>*/}
-                                        </span>
+                                        
                                         <span style={{ align: 'left', width: "33%" }}>{it.price}</span>
                                     </div>
                                     
@@ -607,7 +677,7 @@ class Checkout extends Component {
 {this.state.newTotal}</b></span>
                             </div>,
                                 <div className="item-details">
-                                <Button style={{ width: "100%" }} variant="contained" onClick={() => this.onItemCheckoutClicked()} color="primary">PLACE ORDER</Button>
+                                <Button style={{ width: "100%" }} variant="contained" onClick={() => this.onPlaceOrderClickHandler()} color="primary">PLACE ORDER</Button>
                             </div>
 
                         </CardContent>
