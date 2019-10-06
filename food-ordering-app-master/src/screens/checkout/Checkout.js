@@ -28,9 +28,9 @@ import { StepButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import IconButton from '@material-ui/core/IconButton';
-/*import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';*/
-
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Divider from '@material-ui/core/Divider';
 
 
 
@@ -291,6 +291,7 @@ class Checkout extends Component {
             message: null,
             stepIndex: 0,
             finished: false,
+            snackOpen:false,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
         
@@ -312,6 +313,20 @@ class Checkout extends Component {
         console.log("state changed");
         this.setState({ state_uuid: event.target.value });
     }
+
+    inputFlatNoChangeHandler = (e) => {
+        this.setState({ flatNo: e.target.value });
+    }
+    inputPincodeChangeHandler = (e) => {
+        this.setState({ pincode: e.target.value });
+    }
+    inputCityChangeHandler = (e) => {
+        this.setState({ city: e.target.value });
+    }
+    inputLocalityChangeHandler = (e) => {
+        this.setState({ locality: e.target.value });
+    }
+
 
     /*
     handleNext = () => {
@@ -424,20 +439,21 @@ class Checkout extends Component {
     }
 
     saveAddressClickHandler = () => {
+        console.log("inside saveAddressClickHandler");
         this.state.flatNo === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
         this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
         this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
-        this.state.statesList === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
+        this.state.state_uuid === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
         this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
 
-        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { return; }
-
-        this.props.history.push({
+        console.log("1st check");
+        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { console.log("Exception");return; }
+        console.log("af 1st check");
+        /*this.props.history.push({
             pathname: '/confirm/' + this.props.match.params.id,
             bookingSummary: this.state
-        });
+        });*/
 
-        console.log("In SaveAddress post" + url);
         let saveAddressData = JSON.stringify({
             "city": this.state.city,
             "flat_building_name": this.state.flatNo,
@@ -445,23 +461,41 @@ class Checkout extends Component {
             "pincode": this.state.pincode,
             "state_uuid": this.state.state_uuid
         });
+        console.log("SaveAddress Data" + saveAddressData);
         let xhrSaveAddress = new XMLHttpRequest();
         let that = this;
         xhrSaveAddress.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
+            if (this.readyState === 4 && this.status === 201) {
                 //sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
                 //sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
                 that.setState({
                     saveAddress: true,
+                    snackOpen: true
                 });
-
+                console.log("save success");
+            }
+            if (this.readyState === 4 && this.status === 400) {
+                that.setState({
+                    saveAddressErrordisp: "dispBlock",
+                    saveAddressErrormessage: JSON.parse(this.responseText).message
+                });
+                console.log("save error" + JSON.parse(this.responseText).message);
+            }
+            if (this.readyState === 4 && (this.status !== 400 && this.status !== 201)) {
+                that.setState({
+                    saveAddressErrordisp: "dispBlock",
+                    saveAddressErrormessage: JSON.parse(this.responseText).error                     
+                });
+                console.log("save error" + JSON.parse(this.responseText).error);
             }
         });
 
         let url = `${constants.saveAddressUrl}`;
+        console.log("In SaveAddress post" + url);
+
         xhrSaveAddress.open("POST", url);
         //xhrSaveAddress.setRequestHeader("authorization", "Bearer " + window.btoa(this.state.username + ":" + this.state.loginPassword));
-        xhrSaveAddress.setRequestHeader("authorization", "Bearer eyJraWQiOiI5YWYzZjAzNC1lODM2LTRmNTMtYjY5YS04NjU3MDEzYmU4YzIiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDAwOSwiaWF0IjoxNTY5OTgwfQ.UC43UmvS2wGbont3C9gdnIWWzXXrDZ0I-j1CxhhTVwTjscX21vSY3bbcKG8DOgiPDmkE_ZZSxXdtN5GDrN9QCA");
+        xhrSaveAddress.setRequestHeader("authorization", sessionStorage.getItem("authorization"));
         xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
         xhrSaveAddress.setRequestHeader("Cache-Control", "no-cache");
         
@@ -575,7 +609,8 @@ class Checkout extends Component {
                         }
 
                         {this.state.value === 1 &&
-                            <TabContainer>
+                                <TabContainer>
+                                <br/>
                                 <FormControl required>
                                     <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
                                     <Input id="flatNo" type="text" flatNo={this.state.flatNo} onChange={this.inputFlatNoChangeHandler} />
@@ -634,7 +669,7 @@ class Checkout extends Component {
                                     </FormControl>
                                 }
                                 <br />
-                                <Button variant="contained" color="secondary" onClick={()=>this.saveAddressClickHandler()}>SAVE ADDRESS</Button>
+                                <Button variant="contained" color="secondary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
                             </TabContainer>
                         }
                         <div className={classes.actionsContainer}>
@@ -694,7 +729,40 @@ class Checkout extends Component {
                     </Paper>
         
             )
-            }
+                }
+                <div className="items-right-details">
+                    <Card className="cardStyle">
+                        <CardContent>
+                            <b>Summary</b>
+                            <div>
+                                {this.state.state_items_list.map(it => (
+                                    <div className="item-details">
+                                        <span style={{ align: 'left', width: "33%" }}>{it.name}</span>
+                                        <span style={{ align: 'left', width: "11%" }}>
+                                            {/*<RemoveIcon style={{ cursor: "pointer" }} onClick={() => this.onItemRemoveClicked(it)}></RemoveIcon>*/}
+                                        </span>
+                                        <span style={{ align: 'left', width: "11%" }}>{it.count}</span>
+                                        <span style={{ align: 'left', width: "11%" }}>
+                                            {/*<AddIcon style={{ cursor: "pointer" }} onClick={() => this.onItemAddClicked(it)}></AddIcon>*/}
+                                        </span>
+                                        <span style={{ align: 'left', width: "33%" }}>{it.price}</span>
+                                    </div>
+                                ))}
+                            </div>,
+                            
+                                <div className="item-details">
+                                <Divider variant="middle" />
+                                <span style={{ align: 'left', width: "50%" }}><b>NET AMOUNT</b></span>
+                                <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp;&nbsp;{this.state.total}</b></span>
+                            </div>,
+                                <div className="item-details">
+                                <Button style={{ width: "100%" }} variant="contained" onClick={() => this.onItemCheckoutClicked()} color="primary">PLACE ORDER</Button>
+                            </div>
+
+                        </CardContent>
+                    </Card>
+                </div>
+
          </div>
         );
     };
