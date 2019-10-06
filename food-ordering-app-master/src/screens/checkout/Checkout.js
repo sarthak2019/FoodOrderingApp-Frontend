@@ -103,8 +103,9 @@ class Checkout extends Component {
             couponCode: "",
             couponError: "dispNone",
             percent: 0,
-            //total: 0,
+            newTotal: this.props.location.state.total,
             subTotal: 0,
+            discount:0,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
 
@@ -357,6 +358,10 @@ class Checkout extends Component {
                 that.setState({
                     percent: jsonResponse.percent
                 });
+                this.state.subTotal = this.props.location.state.total;
+                this.state.discount = (this.state.subTotal * this.state.percent) / 100;
+                this.state.newTotal = this.state.subTotal - this.state.discount;
+                console.log("subTotal" + this.state.subTotal + "discount" + this.state.discount + "newTotal" + this.state.newTotal);
 
             }).catch((error) => {
                 console.log('error coupon data', error);
@@ -586,8 +591,8 @@ class Checkout extends Component {
                                     </FormControl>
                                     <Button className={classes.button} variant="contained" onClick={() => this.applyCouponCodeClickHandler()}>APPLY</Button>
                                     {this.state.percent > 0 && <div>
-                                        <div>Sub Total &#x20b9;&nbsp;&nbsp; {this.props.location.state.total}</div>
-                                        <div>Discount &#x20b9;&nbsp;&nbsp; {this.state.percent}</div>
+                                        <div>Sub Total &#x20b9;&nbsp;{this.state.subTotal}</div>
+                                        <div>Discount &#x20b9;&nbsp;{this.state.discount}</div>
                                         <Divider variant="middle" />
                                         </div>
                                     }
@@ -596,8 +601,8 @@ class Checkout extends Component {
                             <div className="item-details">
                                 <Divider variant="middle" />
                                 <span style={{ align: 'left', width: "50%" }}><b>NET AMOUNT</b></span>
-                                <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp;&nbsp; <i class="fa fa-inr" aria-hidden="true"></i>
-{this.props.location.state.total}</b></span>
+                                <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp; <i class="fa fa-inr" aria-hidden="true"></i>
+{this.state.newTotal}</b></span>
                             </div>,
                                 <div className="item-details">
                                 <Button style={{ width: "100%" }} variant="contained" onClick={() => this.onItemCheckoutClicked()} color="primary">PLACE ORDER</Button>
