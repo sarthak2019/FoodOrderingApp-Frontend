@@ -593,11 +593,13 @@ class Checkout extends Component {
                                     {this.state.percent > 0 && <div>
                                         <div>Sub Total &#x20b9;&nbsp;{this.state.subTotal}</div>
                                         <div>Discount &#x20b9;&nbsp;{this.state.discount}</div>
-                                        <Divider variant="middle" />
+                                        
                                         </div>
                                     }
                                 </span>
                             </div>
+                            <br/>
+                            <Divider variant="middle" />
                             <div className="item-details">
                                 <Divider variant="middle" />
                                 <span style={{ align: 'left', width: "50%" }}><b>NET AMOUNT</b></span>
