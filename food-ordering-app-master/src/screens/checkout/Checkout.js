@@ -270,7 +270,7 @@ class Checkout extends Component {
     constructor() {
         super();
         /*temp check*/
-        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJiMmIyMjg4My03NjE5LTRlZWUtODY2OS1kMWFkYjIyODc5OWUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDMwNywiaWF0IjoxNTcwMjc4fQ.YrYzZ4rCxZjIPwARn2ESpcaTWAp00Ca97jkR6CYyvNa9l4S_ez1ScHR9OA9nFhYGSWbkTvCBhm0lWaQIPCQoVg");
+        sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJkMWVmZWMwNS0yYzdkLTRhMjMtYjhlNC05NGQ1ZWFmZmI0ZjkiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDM3MSwiaWF0IjoxNTcwMzQzfQ.61W_BZueQ2OmaQKYYZmnuot-pC2l1hEG1TAMPU5NNvs5xtApm-eTPbeR00LA2YEPOd97rw-nlkfXcP6t6sH0yw");
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -291,7 +291,8 @@ class Checkout extends Component {
             message: null,
             stepIndex: 0,
             finished: false,
-            snackOpen:false,
+            snackOpen: false,
+            state_items_list: [],
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
         
@@ -574,7 +575,7 @@ class Checkout extends Component {
         
         return (
         <div>
-            <Stepper active={this.state.stepIndex} orientation="vertical">
+            <Stepper activeStep={this.state.stepIndex} orientation="vertical">
                 <Step>
                     <StepLabel>Delivery</StepLabel>
                     <StepContent>
