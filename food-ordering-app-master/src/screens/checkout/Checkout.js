@@ -149,6 +149,15 @@ class Checkout extends Component {
     inputCouponCodeChangeHandler = (e) => {
         this.setState({ couponCode: e.target.value });
     }
+    addressClickHandler = (addressId) => {
+        this.setState({ address_id: addressId });
+    }
+    paymentMethodChangeHandler = (paymentId) => {
+        console.log("pay" + paymentId);
+        this.setState({
+            payment_id: paymentId
+        });
+    }
 
     handleNext = () => {
         //const { stepIndex } = this.state;
@@ -221,11 +230,6 @@ class Checkout extends Component {
         }).catch((error) => {
             console.log('error fetching States List', error);
         });
-    }
-
-    addressClickHandler = (addressId) => {
-
-        this.setState({ address_id: addressId });
     }
 
     getExistingAddress = () => {
