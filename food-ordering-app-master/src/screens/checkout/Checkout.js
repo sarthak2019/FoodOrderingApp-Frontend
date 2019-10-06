@@ -730,21 +730,21 @@ class Checkout extends Component {
         
             )
                 }
-                <div className="items-right-details">
+                {/* <div className="items-right-details">
                     <Card className="cardStyle">
                         <CardContent>
                             <b>Summary</b>
-                            <div>
-                                {this.state.state_items_list.map(it => (
+                            <div> */}
+                                {/* {this.state.state_items_list.map(it => (
                                     <div className="item-details">
                                         <span style={{ align: 'left', width: "33%" }}>{it.name}</span>
-                                        <span style={{ align: 'left', width: "11%" }}>
+                                        <span style={{ align: 'left', width: "11%" }}> */}
                                             {/*<RemoveIcon style={{ cursor: "pointer" }} onClick={() => this.onItemRemoveClicked(it)}></RemoveIcon>*/}
-                                        </span>
-                                        <span style={{ align: 'left', width: "11%" }}>{it.count}</span>
-                                        <span style={{ align: 'left', width: "11%" }}>
+                                        {/* </span> */}
+                                        {/* <span style={{ align: 'left', width: "11%" }}>{it.count}</span>
+                                        <span style={{ align: 'left', width: "11%" }}> */}
                                             {/*<AddIcon style={{ cursor: "pointer" }} onClick={() => this.onItemAddClicked(it)}></AddIcon>*/}
-                                        </span>
+                                        {/* </span>
                                         <span style={{ align: 'left', width: "33%" }}>{it.price}</span>
                                     </div>
                                 ))}
@@ -761,7 +761,7 @@ class Checkout extends Component {
 
                         </CardContent>
                     </Card>
-                </div>
+                </div> */}
 
          </div>
         );
