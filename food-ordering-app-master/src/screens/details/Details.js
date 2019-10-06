@@ -351,7 +351,7 @@ class Details extends Component {
 
     onItemCheckoutClicked = () => {
         this.props.history.push(
-            {pathname: '/checkout', state:{ items_list_new: this.state.state_items_list }}
+            {pathname: '/checkout', state:{ items_list_new: this.state.state_items_list, total: this.state.total }}
           )
     }
 

@@ -575,6 +575,7 @@ class Checkout extends Component {
         const { stepIndex, finished } = this.state;
         console.log("const" + { stepIndex });
         console.log( this.props.location.state.items_list_new );
+        console.log( this.props.location.state.total );
         const steps = 2;
         
         return (
