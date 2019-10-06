@@ -72,7 +72,6 @@ class Details extends Component {
     }
     render() {
 
-        const { state_items_list } = this.props;
         return (
 
             <div className="details">
@@ -153,7 +152,7 @@ class Details extends Component {
                                 </Badge>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>My Cart</b>
                                 <div>
                                     {this.state.state_items_list.map(it => (
-                                        <div className="item-details">
+                                        <div className="item-details" key={it.id}>
                                             <span style={{ align: 'left', width: "33%" }}>{it.name}</span>
                                             <span style={{ align: 'left', width: "11%" }}>
                                                 <RemoveIcon style={{ cursor: "pointer" }} onClick={() => this.onItemRemoveClicked(it)}></RemoveIcon>
@@ -245,8 +244,8 @@ class Details extends Component {
         let newItemList = this.state.state_items_list
         let itemIndex = 0;
         if (newItemList.length > 0) {
-            newItemList.forEach(function (subscriber, index) {
-                if (subscriber.name === newItem.item_name) {
+            newItemList.forEach(function (item, index) {
+                if (item.name === newItem.item_name) {
                     itemIndex = index;
                 }
             }, this);
@@ -262,6 +261,8 @@ class Details extends Component {
                 itemNodeNew.price = itemNode.price + newItem.price
                 itemNodeNew.count = itemNode.count + 1
                 itemNodeNew.name = itemNode.name
+                itemNodeNew.id = itemNode.id
+                itemNodeNew.item_type = itemNode.item_type
                 newItems.splice(itemIndex, 1, itemNodeNew);
                 this.state.item_count = this.state.item_count + 1
                 this.state.total = this.state.total + newItem.price
@@ -275,6 +276,8 @@ class Details extends Component {
         itemNodeNew.price = newItem.price
         itemNodeNew.name = newItem.item_name
         itemNodeNew.count = 1
+        itemNodeNew.id = newItem.id
+        itemNodeNew.item_type = newItem.item_type
         this.state.total = this.state.total + newItem.price
         newItems.push(itemNodeNew)
         this.state.item_count = this.state.item_count + 1
@@ -286,8 +289,8 @@ class Details extends Component {
     onItemAddClicked = (newItem) => {
         let newItemList = this.state.state_items_list
         let itemIndex = 0;
-        newItemList.forEach(function (subscriber, index) {
-            if (subscriber.name === newItem.name) {
+        newItemList.forEach(function (item, index) {
+            if (item.name === newItem.name) {
                 itemIndex = index;
             }
         }, this);
