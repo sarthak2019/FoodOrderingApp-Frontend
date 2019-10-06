@@ -109,7 +109,7 @@ class Checkout extends Component {
             stepIndex: 0,
             finished: false,
             snackOpen: false,
-            state_items_list: [],
+            //state_items_list: [],
             couponCode: "",
             couponError: "dispNone",
             percent: 0,
@@ -119,10 +119,10 @@ class Checkout extends Component {
         this.getExistingAddress();
         this.getPaymentMethods();
         this.getStatesList();
-        if (this.props.location.state.items_list_new != null || this.props.location.state.items_list_new !== '') {
+        /*if (this.props.location.state.items_list_new != null || this.props.location.state.items_list_new !== '') {
             console.log("Fetch props and set part4");
             this.setState({ state_items_list: this.props.location.state.items_list_new });
-        }
+        }*/
     }
     /*
     componentDidMount() {
@@ -595,8 +595,8 @@ class Checkout extends Component {
                         <CardContent>
                             <b>Summary</b>
                             <div>
-                                {this.state.state_items_list.map(it => (
-                                    <div className="item-details">
+                                {this.props.location.state.items_list_new.map(it => (
+                                    <div className="item-details" key={it.name}>
                                         <span style={{ align: 'left', width: "33%" }}>{it.name}</span>
                                         <span style={{ align: 'left', width: "11%" }}>
                                             {/*<RemoveIcon style={{ cursor: "pointer" }} onClick={() => this.onItemRemoveClicked(it)}></RemoveIcon>*/}
