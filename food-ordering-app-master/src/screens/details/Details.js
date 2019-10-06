@@ -15,6 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
 import Header from '../../common/header/Header';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Checkout from '../checkout/Checkout';
 
 const useStyles = makeStyles(theme => ({
     margin: {
@@ -69,7 +72,7 @@ class Details extends Component {
     }
     render() {
 
-
+        const { state_items_list } = this.props;
         return (
 
             <div className="details">
@@ -344,8 +347,9 @@ class Details extends Component {
     };
 
     onItemCheckoutClicked = () => {
-        
-        this.props.history.push('/checkout');
+        this.props.history.push(
+            {pathname: '/checkout', state:{ items_list_new: this.state.state_items_list }}
+          )
     }
 
 

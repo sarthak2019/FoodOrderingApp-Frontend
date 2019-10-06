@@ -8,5 +8,6 @@ export const constants = {
     orderUrl: "http://localhost:8080/api/order",
     statesUrl: "http://localhost:8080/api/states",
     addressUrl: "http://localhost:8080/api/address/customer",
-    saveAddressUrl: "http://localhost:8080/api/address"
+    saveAddressUrl: "http://localhost:8080/api/address",
+    couponUrl: "http://localhost:8080/api/order/coupon"
 };
