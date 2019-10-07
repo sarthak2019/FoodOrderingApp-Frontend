@@ -43,7 +43,7 @@ class Home extends Component {
                                         <div style={{ fontSize: "18px" }}>{restaurant.restaurant_name}</div>
                                         <div>{restaurant.categories}</div>
                                         <div className="card-details">
-                                            <span style={{ width: "45%", height: "40px", backgroundColor: "yellow", align: 'left' }}>
+                                            <span style={{ width: "45%", height: "40px", backgroundColor: "orange", align: 'left', color: "white" }}>
                                                 <StarIcon></StarIcon>&nbsp;&nbsp;{restaurant.customer_rating}&nbsp;&nbsp;({restaurant.number_customers_rated})
                                         </span>
                                             <span style={{ width: "45%", align: 'right' }}>
