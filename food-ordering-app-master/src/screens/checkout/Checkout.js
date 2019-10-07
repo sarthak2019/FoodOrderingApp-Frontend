@@ -81,6 +81,8 @@ class Checkout extends Component {
     constructor(props) {
         super(props);
 
+        this.myRef = [];
+
         if (sessionStorage.getItem('access-token') == null) {
             props.history.replace('/');
         }
@@ -120,13 +122,24 @@ class Checkout extends Component {
             pinValid: "dispNone",
             pinCheck: false,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true,
-            style: {}
+            style: {},
+            index: null
         }
 
         this.getExistingAddress();
         this.getPaymentMethods();
         this.getStatesList();
     }
+
+    // componentDidMount() {
+    //     // let currentState = this.state;
+    //     // currentState.totalPrice = currentState.originalTotalPrice = parseInt(this.props.location.bookingSummary.unitPrice, 10) * parseInt(this.props.location.bookingSummary.tickets, 10);
+    //     // this.setState({ state: currentState });
+    //     let addId = this.state.address_id;
+    //     var object = this.refs.addId;
+    //     console.log(object);
+    //     console.log(this.state.address_id);
+    // }
 
     /* The below method is used to handle tab changes between EXISTING ADDRESS and NEW ADDRESS. */
     tabChangeHandler = (event, value) => {
@@ -164,19 +177,23 @@ class Checkout extends Component {
     }
 
     /* The below method is used to select an address from the GridList present inside EXISTING ADDRESS tab. */
-    addressClickHandler = (addressId) => {
-        let styleNew = {
-            border: "outset",
-            borderColor: "red",
-            boxShadow: "unset"
-        }
-        let styleIconnew = {
-            color: "green"
+    addressClickHandler = (addressId, indexNew) => {
+
+        this.state.addressList.map((element, index) => {
+            if (this.myRef[index].current != null) {
+                this.myRef[index].current.style.border = "";
+                this.myRef[index].current.style.borderColor = "";
+                this.myRef[index].current.style.boxShadow = "";
+            }
+        })
+        if (this.myRef[indexNew].current != null) {
+            this.myRef[indexNew].current.style.border = "outset";
+            this.myRef[indexNew].current.style.borderColor = "red";
+            this.myRef[indexNew].current.style.boxShadow = "unset";
         }
         this.setState({
             address_id: addressId,
-            style: styleNew,
-            styleIcon: styleIconnew
+            index: indexNew
         });
     }
 
@@ -211,6 +228,7 @@ class Checkout extends Component {
             this.setState({ stepIndex: 0 });
         }
 
+        this.addressClickHandler(this.state.address_id, this.state.index);
     };
 
     /* The below method is used to close the SnackBar. */
@@ -513,17 +531,18 @@ class Checkout extends Component {
                                             <br />
                                             <div className={classes.gridListAddresses}>
                                                 <GridList cols={3} className={classes.gridList}>
-                                                    {this.state.addressList != null && this.state.addressList.map(address => (
+                                                    {this.state.addressList != null && this.state.addressList.map((address, index) => (
+                                                        this.myRef[index] = React.createRef(),
                                                         <GridListTile
                                                             style={this.state.style}
-                                                            key={address.id}>
+                                                            key={address.id} ref={this.myRef[index]}>
                                                             <div>{address.flat_building_name}</div>
                                                             <div>{address.locality}</div>
                                                             <div>{address.city}</div>
                                                             <div>{address.state.state_name}</div>
                                                             <div>{address.pincode}</div>
                                                             <IconButton style={this.state.styleIcon}>
-                                                                <CheckCircleIcon className="tickIcon" onClick={() => this.addressClickHandler(address.id)} />
+                                                                <CheckCircleIcon className="tickIcon" onClick={() => this.addressClickHandler(address.id, index)} />
                                                             </IconButton>
                                                         </GridListTile>
 
