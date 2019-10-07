@@ -5,7 +5,6 @@ import Header from '../../common/header/Header';
 import StarIcon from '@material-ui/icons/Star';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-// import { FaCircle } from 'react-icons/fa';
 
 class Home extends Component {
     constructor(props) {
@@ -23,7 +22,6 @@ class Home extends Component {
     }
 
     render() {
-        const { classes, message } = this.props;
         return (
             <div>
                 <Header
@@ -62,6 +60,7 @@ class Home extends Component {
         )
     }
 
+    /* The below method is used to get all the restaurant details and some particular restaurant details based on the search value. */
     getAllRestaurantData = (value) => {
         if (value == null || value === "") {
             let that = this;
@@ -88,8 +87,6 @@ class Home extends Component {
         else {
             let that = this;
             let url = `${constants.findRestaurant}/${value}`;
-            console.log(value)
-            console.log(url)
             return fetch(url, {
                 method: 'GET',
             }).then((response) => {
@@ -111,18 +108,10 @@ class Home extends Component {
         }
     }
 
+    /* The below method is used to navigate to restaurant details page on click of a restaurant. */
     restaurantClickHandler = (restuaurantId) => {
         this.props.history.push('/restaurant/' + restuaurantId);
     }
-
-    // logout = () => {
-    //     sessionStorage.clear();
-    //     this.props.history.replace('/');
-    // }
-
-    // navigateToProfile = () => {
-    //     this.props.history.push('/profile');
-    // }
 
 }
 

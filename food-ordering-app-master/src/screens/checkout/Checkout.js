@@ -524,7 +524,7 @@ class Checkout extends Component {
                                         <TabContainer>
                                             <br />
                                             <div className="gridListAddresses">
-                                            <GridList cols={3} className="gridListNew" spacing={10}>
+                                                <GridList cols={3} className="gridListNew" spacing={10}>
                                                     {this.state.addressList != null && this.state.addressList.map(address => (
                                                         <GridListTile
                                                             style={this.state.style}
@@ -632,14 +632,14 @@ class Checkout extends Component {
                             </Step>
                         </Stepper>
                         {finished && (
-                            
-                                <Paper square elevation={0} className={classes.resetContainer}>
-                                    <Typography><b> View the summary & place your order now!</b></Typography>
-                                    <Button onClick={this.handleReset} className={classes.button}>
-                                        CHANGE
+
+                            <Paper square elevation={0} className={classes.resetContainer}>
+                                <Typography><b> View the summary & place your order now!</b></Typography>
+                                <Button onClick={this.handleReset} className={classes.button}>
+                                    CHANGE
           </Button>
-                                </Paper>
-                            
+                            </Paper>
+
 
                         )
                         }
@@ -657,7 +657,7 @@ class Checkout extends Component {
 
                                             <span style={{ align: 'left', width: "11%" }}>{it.count}</span>
 
-                                            <span style={{ align: 'left', width: "33%" }}>{it.price}</span>
+                                            <span style={{ align: 'left', width: "33%" }}>&#x20b9;&nbsp;{it.price}</span>
                                         </div>
 
                                     ))}

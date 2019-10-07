@@ -87,7 +87,7 @@ class Header extends Component {
     }
 
     render() {
-        const { classes, screen, history } = this.props;
+        const { screen } = this.props;
         return (
             <div>
                 <header className="app-header">
@@ -251,6 +251,7 @@ class Header extends Component {
 
     }
 
+    /* The below mwthod is used to handle the search change. */
     searchChangeHandler = (e) => {
         const state = this.state
         state[e.target.name] = e.target.value
@@ -258,14 +259,17 @@ class Header extends Component {
         this.props.searchHandler(this.state.search)
     }
 
+    /* The below method is used to set the state variable when the Contact No. input field gets changed during LOGIN. */
     inputUsernameChangeHandler = (e) => {
         this.setState({ username: e.target.value });
     }
 
+    /* The below method is used to set the state variable when the Password input field gets changed during LOGIN. */
     inputLoginPasswordChangeHandler = (e) => {
         this.setState({ loginPassword: e.target.value });
     }
 
+    /* The below method is used to log in an user on click of the LOGIN button during LOGIN. */
     loginClickHandler = () => {
         this.state.username === "" ? this.setState({ usernameRequired: "dispBlock" }) : this.setState({ usernameRequired: "dispNone" });
         this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
@@ -317,26 +321,32 @@ class Header extends Component {
         }
     }
 
+    /* The below method is used to set the state variable when the First Name input field gets changed during SIGNUP. */
     inputFirstNameChangeHandler = (e) => {
         this.setState({ firstname: e.target.value });
     }
 
+    /* The below method is used to set the state variable when the Last Name input field gets changed during SIGNUP. */
     inputLastNameChangeHandler = (e) => {
         this.setState({ lastname: e.target.value });
     }
 
+    /* The below method is used to set the state variable when the Email input field gets changed during SIGNUP. */
     inputEmailChangeHandler = (e) => {
         this.setState({ email: e.target.value });
     }
 
+    /* The below method is used to set the state variable when the Password input field gets changed during SIGNUP. */
     inputRegisterPasswordChangeHandler = (e) => {
         this.setState({ registerPassword: e.target.value });
     }
 
+    /* The below method is used to set the state variable when the Contact No. input field gets changed during SIGNUP. */ 
     inputContactChangeHandler = (e) => {
         this.setState({ contact: e.target.value });
     }
 
+    /* The below method is used to register an user on click of the SIGNUP button. */
     registerClickHandler = () => {
         this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
         this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
@@ -431,14 +441,17 @@ class Header extends Component {
         }
     }
 
+    /* The below method is used to close the modal for Login and Signup. */
     closeModalHandler = () => {
         this.setState({ modalIsOpen: false });
     }
 
+    /* The below method is used to close the SnackBar. */
     handleSnackClose = () => {
         this.setState({ snackOpen: false })
     }
 
+    /* The below method is used to open the modal for Login and Signup. */
     openModalHandler = event => {
         if (this.state.loggedIn === false) {
             this.setState({
@@ -465,10 +478,10 @@ class Header extends Component {
                 anchorEl: event.currentTarget,
                 popoverOpen: true
             });
-            console.log(this.state.anchorEl)
         }
     }
 
+    /* The below method is used to handle the tab changes between Login and Signup in the modal. */
     tabChangeHandler = (event, value) => {
         this.setState({
             value,
@@ -494,11 +507,7 @@ class Header extends Component {
         });
     }
 
-    // logoutHandler = (e) => {
-    //     this.props.logoutHandler();
-    //     this.handleClose();
-    // }
-
+    /* The below method is used to close the Popover for My Profile and Logout. */
     handleClose = () => {
         this.setState({
             anchorEl: null,
@@ -506,21 +515,19 @@ class Header extends Component {
         });
     }
 
+    /* The below method is used to handle logout functionality. */
     logoutHandler = () => {
         sessionStorage.clear();
-        this.setState({ loggedIn: false,
-            loginDisplay: "LOGIN" })
+        this.setState({
+            loggedIn: false,
+            loginDisplay: "LOGIN"
+        })
         this.handleClose();
         this.props.history.replace('/');
     }
 
-    // handleClose = () => {
-    //     this.props.history.push('/profile');
-    // }
-
+    /* The below method is used to navigate to profile page. */
     handleProfile = () => {
-        // this.props.handleProfile();
-        // this.handleClose();
         this.props.history.push('/profile');
         this.handleClose();
     }
