@@ -60,6 +60,7 @@ class Home extends Component {
         )
     }
 
+    /* The below method is used to get all the restaurant details and some particular restaurant details based on the search value. */
     getAllRestaurantData = (value) => {
         if (value == null || value === "") {
             let that = this;
@@ -107,6 +108,7 @@ class Home extends Component {
         }
     }
 
+    /* The below method is used to navigate to restaurant details page on click of a restaurant. */
     restaurantClickHandler = (restuaurantId) => {
         this.props.history.push('/restaurant/' + restuaurantId);
     }

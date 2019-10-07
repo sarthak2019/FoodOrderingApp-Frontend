@@ -97,6 +97,7 @@ class Checkout extends Component {
             cityRequired: "dispNone",
             city: "",
             pincodeRequired: "dispNone",
+            stateListRequired: "dispNone",
             pincode: "",
             saveAddress: false,
             paymentMethods: [],
@@ -126,29 +127,43 @@ class Checkout extends Component {
         this.getPaymentMethods();
         this.getStatesList();
     }
+
+    /* The below method is used to handle tab changes between EXISTING ADDRESS and NEW ADDRESS. */
     tabChangeHandler = (event, value) => {
         this.setState({ value });
     }
 
+    /* The below method is used to set the state variable on change of the state value in the State Select list. */
     statesChangeHandler = event => {
         this.setState({ state_uuid: event.target.value });
     }
 
+    /* The below method is used to set the state variable on change of the Flat / Building No. inputs. */
     inputFlatNoChangeHandler = (e) => {
         this.setState({ flatNo: e.target.value });
     }
+
+    /* The below method is used to set the state variable on change of the Pincode input. */
     inputPincodeChangeHandler = (e) => {
         this.setState({ pincode: e.target.value });
     }
+
+    /* The below method is used to set the state variable on change of the City input. */
     inputCityChangeHandler = (e) => {
         this.setState({ city: e.target.value });
     }
+
+    /* The below method is used to set the state variable on change of the Locality input. */
     inputLocalityChangeHandler = (e) => {
         this.setState({ locality: e.target.value });
     }
+
+    /* The below method is used to set the state variable on change of the Coupon input. */
     inputCouponCodeChangeHandler = (e) => {
         this.setState({ couponCode: e.target.value });
     }
+
+    /* The below method is used to select an address from the GridList present inside EXISTING ADDRESS tab. */
     addressClickHandler = (addressId) => {
         let styleNew = {
             border: "outset",
@@ -164,10 +179,13 @@ class Checkout extends Component {
             styleIcon: styleIconnew
         });
     }
+
+    /* The below method is used to select an payment method. */
     paymentMethodChangeHandler = (e) => {
         this.setState({ payment_id: e.target.value });
     };
 
+    /* The below method is used to move to the next Step in the Stepper. */
     handleNext = () => {
         if (this.state.address_id !== "" && this.state.address_id !== null) {
             let newstepIndex = this.state.stepIndex + 1;
@@ -178,7 +196,7 @@ class Checkout extends Component {
         }
     };
 
-
+    /* The below method is used to move to the previous Step in the Stepper. */
     handlePrev = () => {
         const { stepIndex } = this.state;
         if (stepIndex > 0) {
@@ -186,6 +204,7 @@ class Checkout extends Component {
         }
     };
 
+    /* The below methos is used to reset the active step index value in the Stepper. */
     handleReset = () => {
         const { stepIndex } = this.state;
         if (stepIndex > 0) {
@@ -194,14 +213,15 @@ class Checkout extends Component {
 
     };
 
+    /* The below method is used to close the SnackBar. */
     handleClose = () => {
-
         this.setState({
             snackOpen: false,
             snackMessage: ""
         })
     };
 
+    /* The below method is used to get all the payment methods from the database. */
     getPaymentMethods = () => {
         let that = this;
         let url = `${constants.paymentMethodUrl}`;
@@ -218,6 +238,7 @@ class Checkout extends Component {
         });
     }
 
+    /* The below method is used to get all the states from the database. */
     getStatesList = () => {
         let that = this;
         let url = `${constants.statesUrl}`;
@@ -234,6 +255,7 @@ class Checkout extends Component {
         });
     }
 
+    /* The below mwthod is used to get all the addresses of the logged in user from the database. */
     getExistingAddress = () => {
         let that = this;
         let url = `${constants.addressUrl}`;
@@ -259,6 +281,7 @@ class Checkout extends Component {
         });
     }
 
+    /* The below method is used to save an address for the logged in user. */
     saveAddressClickHandler = () => {
         this.state.flatNo === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
         this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
@@ -331,6 +354,7 @@ class Checkout extends Component {
         }
     }
 
+    /* The below method is used to apply a coupon when the APPLY button is clicked. */
     applyCouponCodeClickHandler = () => {
         let value = this.state.couponCode;
         if (value !== null || value !== "") {
@@ -376,6 +400,7 @@ class Checkout extends Component {
         }
     }
 
+    /* The below method is used to place an order when the PLACE ORDER button is clicked. */
     onPlaceOrderClickHandler = () => {
 
         let item_quantities = []
@@ -436,6 +461,7 @@ class Checkout extends Component {
         xhrSaveOrder.send(saveOrderData);
     }
 
+    /* The below method is used to render the step action for the Stepper. */
     renderStepActions(step) {
         return (
             <div style={{ margin: '12px 0' }}>

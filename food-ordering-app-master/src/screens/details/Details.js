@@ -17,6 +17,8 @@ import Button from '@material-ui/core/Button';
 import Header from '../../common/header/Header';
 
 class Details extends Component {
+
+    /* The below mwthod is used to get the restaurant details based on the restaurant uuid. */
     getData = () => {
         let that = this;
         let myUrl = `${constants.restaurantUrl}/${this.props.match.params.id}`;
@@ -187,6 +189,7 @@ class Details extends Component {
         )
     }
 
+    /* The below method is used to add one item in the cart. */
     onAddClicked = (newItem) => {
         let newItemList = this.state.state_items_list
         let itemIndex = 0;
@@ -237,6 +240,7 @@ class Details extends Component {
         this.setState({ message: "Item added to cart!" })
     }
 
+    /* The below method is used to increase the count of an item in the cart. */
     onItemAddClicked = (newItem) => {
         let newItemList = this.state.state_items_list
         let itemIndex = 0;
@@ -261,6 +265,7 @@ class Details extends Component {
         this.setState({ message: "Item quantity increased by 1!" })
     }
 
+    /* The below method is used to decrease the count of an item or remove an item from the cart. */
     onItemRemoveClicked = (newItem) => {
         let newItemList = this.state.state_items_list
         let itemIndex = 0;
@@ -302,11 +307,12 @@ class Details extends Component {
 
     }
 
+    /* The below method is used to close the SnackBar. */
     handleClose = () => {
-
         this.setState({ open: false })
     };
 
+    /* The below method is used to navigate to checkout page on click of the CHECKOUT button. */
     onItemCheckoutClicked = () => {
         this.props.history.push(
             { pathname: '/checkout', state: { items_list_new: this.state.state_items_list, total: this.state.total, restaurant_id: this.state.restaurant_id, restaurant_name: this.state.restaurant_name } }
