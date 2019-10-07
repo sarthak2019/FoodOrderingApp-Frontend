@@ -370,13 +370,18 @@ class Checkout extends Component {
                 if (jsonResponse.coupon_name !== null) {
                     this.setState({ message: null })
                 }
-                that.setState({
+                this.setState({
                     percent: jsonResponse.percent,
                     coupon_id: jsonResponse.id,
                 });
-                this.state.subTotal = this.props.location.state.total;
-                this.state.discount = (this.state.subTotal * this.state.percent) / 100;
-                this.state.newTotal = this.state.subTotal - this.state.discount;
+                let newsubTotal = this.props.location.state.total;
+                let newDiscount = (this.state.newTotal * this.state.percent) / 100;
+                let newTotalval = this.state.newTotal - newDiscount;
+                this.setState({
+                    subTotal: newsubTotal,
+                    discount: newDiscount,
+                    newTotal: newTotalval
+                })
                 console.log("subTotal" + this.state.subTotal + "discount" + this.state.discount + "newTotal" + this.state.newTotal);
 
             }).catch((error) => {
@@ -676,7 +681,7 @@ class Checkout extends Component {
                             <div className="item-details">
                                 <Divider variant="middle" />
                                 <span style={{ align: 'left', width: "50%" }}><b>NET AMOUNT</b></span>
-                                <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp; <i class="fa fa-inr" aria-hidden="true"></i>
+                                <span style={{ align: 'right', width: "50%" }}><b>&#x20b9;&nbsp; 
 {this.state.newTotal}</b></span>
                             </div>,
                                 <div className="item-details">
