@@ -125,28 +125,38 @@ class Checkout extends Component {
         this.setState({ value });
     }
 
+    /* The below method is used to set the state variable on change of the state value in the State Select list. */
     statesChangeHandler = event => {
-        console.log("state changed");
         this.setState({ state_uuid: event.target.value });
     }
 
+    /* The below method is used to set the state variable on change of the Flat / Building No. inputs. */
     inputFlatNoChangeHandler = (e) => {
         this.setState({ flatNo: e.target.value });
     }
+
+    /* The below method is used to set the state variable on change of the Pincode input. */
     inputPincodeChangeHandler = (e) => {
         this.setState({ pincode: e.target.value });
     }
+
+    /* The below method is used to set the state variable on change of the City input. */
     inputCityChangeHandler = (e) => {
         this.setState({ city: e.target.value });
     }
+
+/* The below method is used to set the state variable on change of the Locality input. */
     inputLocalityChangeHandler = (e) => {
         this.setState({ locality: e.target.value });
     }
+
+/* The below method is used to set the state variable on change of the Coupon input. */
     inputCouponCodeChangeHandler = (e) => {
         this.setState({ couponCode: e.target.value });
     }
+
+/* The below method is used to select an address from the GridList present inside EXISTING ADDRESS tab. */
     addressClickHandler = (addressId) => {
-        console.log("inside addressClickHandler")
         let styleNew = {
             border: "outset",
             borderColor: "red",
@@ -162,25 +172,24 @@ class Checkout extends Component {
         });
         console.log(this.state.address_id)
     }
+
+/* The below method is used to select an payment method. */
     paymentMethodChangeHandler = (e) => {
-        console.log("inside paymentMethodChangeHandler")
         this.setState({ payment_id: e.target.value });
-        console.log(this.state.payment_id)
     };
 
+/* The below method is used to move to the next Step in the Stepper. */
     handleNext = () => {
-        console.log("bEFORE currIndex" + "-- " + this.state.stepIndex);
         if (this.state.address_id !== "" && this.state.address_id !== null) {
-            this.state.stepIndex = this.state.stepIndex + 1;
+            let newstepIndex = this.state.stepIndex + 1;
             this.setState({
                 finished: this.state.stepIndex >= 1,
+                stepIndex: newstepIndex
             });
         }
-        console.log("next currIndex-- " + this.state.stepIndex);
-        console.log("Fetch props" + JSON.stringify(this.props));
     };
 
-
+/* The below method is used to move to the previous Step in the Stepper. */
     handlePrev = () => {
         const { stepIndex } = this.state;
         if (stepIndex > 0) {
@@ -188,15 +197,15 @@ class Checkout extends Component {
         }
     };
 
+/* The below methos is used to reset the active step index value in the Stepper. */
     handleReset = () => {
         const { stepIndex } = this.state;
-        console.log("in handlerReset" + stepIndex);
         if (stepIndex > 0) {
             this.setState({ stepIndex: 0 });
         }
-        console.log("after handlerReset" + this.state.stepIndex);
     };
 
+/* The below method is used to close the SnackBar. */
     handleClose = () => {
 
         this.setState({
@@ -205,27 +214,25 @@ class Checkout extends Component {
         })
     };
 
+/* The below method is used to get all the payment methods from the database. */
     getPaymentMethods = () => {
 
         let that = this;
         let url = `${constants.paymentMethodUrl}`;
-        console.log("In get" + url);
         return fetch(url, {
             method: 'GET',
         }).then((response) => {
-
-            console.log("In then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
             that.setState({
                 paymentMethods: jsonResponse.paymentMethods
             });
-            console.log("val" + this.state.paymentMethods);
         }).catch((error) => {
             console.log('error fetching paymentMethods', error);
         });
     }
 
+/* The below method is used to get all the states from the database. */
     getStatesList = () => {
         let that = this;
         let url = `${constants.statesUrl}`;
@@ -249,17 +256,14 @@ class Checkout extends Component {
     getExistingAddress = () => {
         let that = this;
         let url = `${constants.addressUrl}`;
-        console.log("In Address get" + url + " token" + sessionStorage.getItem("access-token"));
         return fetch(url, {
             method: 'GET',
             headers: {
                 'authorization': 'Bearer ' + sessionStorage.getItem("access-token")
             }
         }).then((response) => {
-            console.log("In address then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
-            console.log("In then2" + jsonResponse.addresses);
             if (jsonResponse.addresses === null) {
                 this.setState({ message: "There are no saved addresses! You can save an address using the 'New Address' tab or using your 'Profile' menu option." })
             }
@@ -269,24 +273,20 @@ class Checkout extends Component {
             that.setState({
                 addressList: jsonResponse.addresses
             });
-            console.log("val" + JSON.stringify(this.state.addressList));
         }).catch((error) => {
             console.log('error fetching addressList', error);
         });
     }
 
     saveAddressClickHandler = () => {
-        console.log("inside saveAddressClickHandler");
         this.state.flatNo === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
         this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
         this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
         this.state.state_uuid === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
         this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
 
-        console.log("1st check");
         if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { console.log("Exception"); return; }
-        console.log("af 1st check");
-
+        
         var pinValidation = /^\d{6}$/;
 
         if (pinValidation.test(String(this.state.pincode)) === false) {
@@ -310,7 +310,6 @@ class Checkout extends Component {
                 "pincode": this.state.pincode,
                 "state_uuid": this.state.state_uuid
             });
-            console.log("SaveAddress Data" + saveAddressData);
             let xhrSaveAddress = new XMLHttpRequest();
             let that = this;
             xhrSaveAddress.addEventListener("readystatechange", function () {
@@ -321,7 +320,6 @@ class Checkout extends Component {
                         snackOpen: true,
                         snackMessage: "Address saved successfully"
                     });
-                    console.log("save success");
                     that.getExistingAddress();
                 }
                 if (this.readyState === 4 && this.status === 400) {
@@ -331,7 +329,6 @@ class Checkout extends Component {
                         snackOpen: true,
                         snackMessage: "Unable to save address"
                     });
-                    console.log("save error" + JSON.parse(this.responseText).message);
                 }
                 if (this.readyState === 4 && (this.status !== 400 && this.status !== 201)) {
                     that.setState({
@@ -340,13 +337,11 @@ class Checkout extends Component {
                         snackOpen: true,
                         snackMessage: "Unable to save address"
                     });
-                    console.log("save error" + JSON.parse(this.responseText).error);
                 }
             });
 
             let url = `${constants.saveAddressUrl}`;
-            console.log("In SaveAddress post" + url);
-
+            
             xhrSaveAddress.open("POST", url);
             xhrSaveAddress.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
             xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
@@ -358,11 +353,9 @@ class Checkout extends Component {
 
     applyCouponCodeClickHandler = () => {
         let value = this.state.couponCode;
-        console.log("in CouponCHange" + value);
         if (value !== null || value !== "") {
             let that = this;
             let url = `${constants.couponUrl}/${value}`;
-            console.log("couponUrl" + url);
             return fetch(url, {
                 method: 'GET',
                 headers: {
@@ -371,27 +364,36 @@ class Checkout extends Component {
             }).then((response) => {
                 return response.json();
             }).then((jsonResponse) => {
-                console.log("coup resp" + JSON.stringify(jsonResponse));
-                if (jsonResponse.coupon_name === null) {
-                    this.setState({ message: "No restaurant with the given name." })
+                if (jsonResponse.percent == null || jsonResponse.percent == "") {
+                    this.setState({
+                        snackMessage: "No coupon with the given name",
+                        snackOpen: true,
+                        newTotal: this.props.location.state.total,
+                        subTotal: this.props.location.state.total,
+                        discount: 0
+                    })
+                    return;
                 }
-                if (jsonResponse.coupon_name !== null) {
-                    this.setState({ message: null })
-                }
-                this.setState({
-                    percent: jsonResponse.percent,
-                    coupon_id: jsonResponse.id,
-                });
-                let newsubTotal = this.props.location.state.total;
-                let newDiscount = (this.state.newTotal * this.state.percent) / 100;
-                let newTotalval = this.state.newTotal - newDiscount;
-                this.setState({
-                    subTotal: newsubTotal,
-                    discount: newDiscount,
-                    newTotal: newTotalval
-                })
-                console.log("subTotal" + this.state.subTotal + "discount" + this.state.discount + "newTotal" + this.state.newTotal);
 
+                if (jsonResponse.percent !== null || jsonResponse.percent !== "") {
+
+                    this.setState({
+                        snackMessage: "",
+                        snackOpen: false,
+                        percent: jsonResponse.percent,
+                        coupon_id: jsonResponse.id
+                    })
+
+                    let newsubTotal = this.props.location.state.total;
+                    let newDiscount = (this.state.newTotal * this.state.percent) / 100;
+                    let newTotalval = this.state.newTotal - newDiscount;
+
+                    this.setState({
+                        subTotal: newsubTotal,
+                        discount: newDiscount,
+                        newTotal: newTotalval
+                    })
+                }
             }).catch((error) => {
                 console.log('error coupon data', error);
             });
@@ -399,11 +401,7 @@ class Checkout extends Component {
     }
 
     onPlaceOrderClickHandler = () => {
-        console.log("inside onPlaceOrderClickHandler");
-
-        console.log("1st check");
-        console.log("af 1st check");
-
+        
         let item_quantities = []
         if (this.props.location.state.items_list_new.length > 0) {
             this.props.location.state.items_list_new.forEach(function (item, index) {
@@ -424,7 +422,6 @@ class Checkout extends Component {
             "payment_id": this.state.payment_id,
             "restaurant_id": this.props.location.state.restaurant_id
         });
-        console.log("saveOrderData" + saveOrderData);
         let xhrSaveOrder = new XMLHttpRequest();
         let that = this;
         xhrSaveOrder.addEventListener("readystatechange", function () {
@@ -468,8 +465,6 @@ class Checkout extends Component {
     }
 
     renderStepActions(step) {
-        const { stepIndex } = this.state;
-        const steps = 2;
         return (
             <div style={{ margin: '12px 0' }}>
                 <Button
