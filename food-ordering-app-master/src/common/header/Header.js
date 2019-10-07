@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Header.css';
-import { constants } from '../../common/utils';
+import { constants } from '../utils';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';

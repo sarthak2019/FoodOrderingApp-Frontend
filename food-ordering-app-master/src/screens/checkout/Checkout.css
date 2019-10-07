@@ -2,11 +2,17 @@
     background-color: #3f51b5;
     color: white;
 }
-.gridListUpcomingMovies {
+.gridListAddresses {
     display:flex;
     flex-wrap: wrap;
-    width: 100%;
+    justify-content: space-around;
+    overflow: hidden;
 }
+.gridListNew {
+    flex-wrap: nowrap;
+    transform: translateZ(0);
+}
+
 .gridTile {
      border:none;
      
@@ -14,6 +20,11 @@
 .gridTile:hover {
     border:outset;
     border-color:green;
+    box-shadow:unset;
+}
+.gridTile.tickIcon:active {
+    border:outset;
+    border-color:rgb(241, 231, 211);
     box-shadow:unset;
 }
 .tickIcon {
@@ -24,4 +35,25 @@
 }
 .tickIcon:active {
     color: green;
+}
+
+.main-div {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 800px) {
+    .main-div {
+        flex-direction: column;
+    }
+}
+
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
 }

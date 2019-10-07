@@ -38,3 +38,10 @@
     text-align: left;
     padding: 20px;
 }
+
+
+.restaurant-details {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
