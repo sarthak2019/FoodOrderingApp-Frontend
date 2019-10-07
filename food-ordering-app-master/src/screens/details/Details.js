@@ -150,7 +150,7 @@ class Details extends Component {
                                             <span style={{ align: 'left', width: "11%" }}>
                                                 <AddIcon style={{ cursor: "pointer" }} onClick={() => this.onItemAddClicked(it)}></AddIcon>
                                             </span>
-                                            <span style={{ align: 'left', width: "33%" }}>&#x20b9;&nbsp;{it.price}</span>
+                                            <span style={{ align: 'left', width: "33%" }}><span style={{ color: "grey" }}><b>&#x20b9;</b></span>&nbsp;{it.price}</span>
                                         </div>
                                     ))}
                                 </div>,

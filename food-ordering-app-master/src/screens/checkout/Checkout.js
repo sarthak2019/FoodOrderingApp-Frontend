@@ -661,7 +661,7 @@ class Checkout extends Component {
 
                                             <span style={{ align: 'left', width: "11%" }}>{it.count}</span>
 
-                                            <span style={{ align: 'left', width: "33%" }}>{it.price}</span>
+                                            <span style={{ align: 'left', width: "33%" }}><span style={{ color: "grey" }}><b>&#x20b9;</b></span>&nbsp;{it.price}</span>
                                         </div>
 
                                     ))}
@@ -690,7 +690,7 @@ class Checkout extends Component {
                                 <div className="item-details">
                                     <Divider variant="middle" />
                                     <span style={{ align: 'left', width: "40%" }}><b>Net Amount</b></span>
-                                    <span style={{ align: 'right', width: "40%" }}><b>&#x20b9;&nbsp;
+                                    <span style={{ align: 'right', width: "40%" }}><b><span style={{ color: "grey" }}>&#x20b9;</span>&nbsp;
 {this.state.newTotal}</b></span>
                                 </div>,
                                 <div className="item-details">
