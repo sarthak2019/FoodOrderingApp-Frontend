@@ -505,8 +505,7 @@ class Checkout extends Component {
 
 
     render() {
-        const { stepIndex, finished } = this.state;
-        const { state_items_list } = this.props.location.state.items_list_new;
+        const { finished } = this.state;
 
         return (
             <div>
