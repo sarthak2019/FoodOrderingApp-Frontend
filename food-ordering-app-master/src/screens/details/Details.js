@@ -39,6 +39,7 @@ class Details extends Component {
             return response.json();
         }).then((jsonResponse) => {
             that.setState({
+                restaurant_id: jsonResponse.id,
                 restaurant_picture: jsonResponse.photo_URL,
                 restaurant_name: jsonResponse.restaurant_name,
                 restaurant_locality: jsonResponse.address.locality,
@@ -350,7 +351,7 @@ class Details extends Component {
 
     onItemCheckoutClicked = () => {
         this.props.history.push(
-            {pathname: '/checkout', state:{ items_list_new: this.state.state_items_list, total: this.state.total }}
+            {pathname: '/checkout', state:{ items_list_new: this.state.state_items_list, total: this.state.total, restaurant_id: this.state.restaurant_id }}
           )
     }
 

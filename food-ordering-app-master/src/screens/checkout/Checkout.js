@@ -400,14 +400,25 @@ class Checkout extends Component {
             bookingSummary: this.state
         });*/
 
+        let item_quantities = []
+        if (this.props.location.state.items_list_new.length > 0) {
+            this.props.location.state.items_list_new.forEach(function (item, index) {
+                let itemNew={}
+                itemNew.item_id = item.id;
+                itemNew.price = item.price;
+                itemNew.quantity = item.count;
+                item_quantities.push(itemNew);
+            }, this);
+        }
+
         let saveOrderData = JSON.stringify({
             "address_id": this.state.address_id,
             "bill": this.state.newTotal,
             "coupon_id": this.state.coupon_id,
             "discount": this.state.discount,
-            "item_quantities": this.props.location.state.items_list_new,
+            "item_quantities": item_quantities,
             "payment_id": this.state.payment_id,
-            "restaurant_id": this.state.restaurant_id
+            "restaurant_id": this.props.location.state.restaurant_id
         });
         console.log("saveOrderData" + saveOrderData);
         let xhrSaveOrder = new XMLHttpRequest();
