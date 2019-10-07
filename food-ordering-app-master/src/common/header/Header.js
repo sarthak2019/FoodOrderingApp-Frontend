@@ -87,7 +87,7 @@ class Header extends Component {
     }
 
     render() {
-        const { classes, screen, history } = this.props;
+        const { screen } = this.props;
         return (
             <div>
                 <header className="app-header">
@@ -465,7 +465,6 @@ class Header extends Component {
                 anchorEl: event.currentTarget,
                 popoverOpen: true
             });
-            console.log(this.state.anchorEl)
         }
     }
 
@@ -494,11 +493,6 @@ class Header extends Component {
         });
     }
 
-    // logoutHandler = (e) => {
-    //     this.props.logoutHandler();
-    //     this.handleClose();
-    // }
-
     handleClose = () => {
         this.setState({
             anchorEl: null,
@@ -508,19 +502,15 @@ class Header extends Component {
 
     logoutHandler = () => {
         sessionStorage.clear();
-        this.setState({ loggedIn: false,
-            loginDisplay: "LOGIN" })
+        this.setState({
+            loggedIn: false,
+            loginDisplay: "LOGIN"
+        })
         this.handleClose();
         this.props.history.replace('/');
     }
 
-    // handleClose = () => {
-    //     this.props.history.push('/profile');
-    // }
-
     handleProfile = () => {
-        // this.props.handleProfile();
-        // this.handleClose();
         this.props.history.push('/profile');
         this.handleClose();
     }

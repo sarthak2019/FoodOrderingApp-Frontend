@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { constants } from '../../common/utils';
-import { makeStyles } from '@material-ui/core/styles';
 import StarIcon from '@material-ui/icons/Star';
 import './Details.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,18 +15,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
 import Header from '../../common/header/Header';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Checkout from '../checkout/Checkout';
-
-const useStyles = makeStyles(theme => ({
-    margin: {
-        margin: theme.spacing(2),
-    },
-    padding: {
-        padding: theme.spacing(0, 2),
-    },
-}));
 
 class Details extends Component {
     getData = () => {
@@ -99,12 +86,12 @@ class Details extends Component {
                         <br />
                         <div className="restaurant-details">
                             <span><div><StarIcon></StarIcon>&nbsp;&nbsp;{this.state.restaurant_customer_rating}</div>
-                            <div>AVERGAE RATING BY {this.state.restaurant_number_customers_rated} CUSTOMERS</div></span>
-                                <span><div><b>&#x20b9;</b>{this.state.restaurant_number_customers_rated}</div>
+                                <div>AVERGAE RATING BY {this.state.restaurant_number_customers_rated} CUSTOMERS</div></span>
+                            <span><div><b>&#x20b9;</b>{this.state.restaurant_number_customers_rated}</div>
                                 <div>AVERAGE COST FOR TWO PEOPLE</div></span></div>
 
-                            
-                        
+
+
                     </div>
                 </div>
 
@@ -123,7 +110,7 @@ class Details extends Component {
                                         </span>}
 
                                         {item.item_type === "VEG" && <span id="veg" style={{ float: "left", width: "25%" }}>
-                                        <FontAwesomeIcon icon={faCircle} style={{ color: "green" }}></FontAwesomeIcon>
+                                            <FontAwesomeIcon icon={faCircle} style={{ color: "green" }}></FontAwesomeIcon>
                                         </span>}
 
                                         <span style={{ float: "left", width: "25%" }}>
@@ -201,46 +188,6 @@ class Details extends Component {
     }
 
     onAddClicked = (newItem) => {
-        // console.log(newItem.item_name)
-        // let newItemList = [];
-        // let found = false
-        // console.log(newItemList)
-        // console.log(this.state.state_items_list.length)
-        // newItemList = this.state.state_items_list
-        // if ((newItemList.length > 0 && this.state.found === true)) {
-        //     console.log("inside if")
-        //     for (let item of newItemList) {
-        //         if (item.name === newItem.item_name) {
-        //             console.log("inside 2nd if")
-        //             item.count = item.count + 1
-        //             item.price = item.price + newItem.price
-        //             this.setState({ found: true })
-        //             let itemNode = item
-        //             newItemList.pop(item)
-        //             newItemList.push(itemNode)
-        //             this.state.item_count = this.state.item_count + 1
-        //             console.log(itemNode)
-        //             console.log(newItemList)
-        //             this.setState({open: true})
-        //             this.setState({message: "Item added to cart!"})
-        //             return
-        //         }
-        //     }
-        //     this.setState({ found: false })
-        // }
-        // this.setState({ found: true })
-        // console.log("inside 1st else")
-        // let itemNode = {};
-        // itemNode.name = newItem.item_name
-        // itemNode.count = 1
-        // itemNode.price = newItem.price
-        // this.state.item_count = this.state.item_count + 1
-        // newItemList.push(itemNode)
-        // this.setState({open: true})
-        // this.setState({message: "Item added to cart!"})
-        // this.setState({ state_items_list: newItemList });
-        // console.log(this.state.state_items_list);
-        console.log(newItem.item_name)
         let newItemList = this.state.state_items_list
         let itemIndex = 0;
         if (newItemList.length > 0) {
@@ -250,12 +197,9 @@ class Details extends Component {
                 }
             }, this);
         }
-        // }
         let itemNode = newItemList[itemIndex];
-        console.log(itemNode)
         let newItems = newItemList;
         let itemNodeNew = {}
-        //newItems.splice(itemIndex, 1);
         if (itemNode !== undefined) {
             if (itemNode.name === newItem.item_name) {
                 itemNodeNew.price = itemNode.price + newItem.price
@@ -264,24 +208,31 @@ class Details extends Component {
                 itemNodeNew.id = itemNode.id
                 itemNodeNew.item_type = itemNode.item_type
                 newItems.splice(itemIndex, 1, itemNodeNew);
-                this.state.item_count = this.state.item_count + 1
-                this.state.total = this.state.total + newItem.price
-                this.setState({ open: true })
+                let newitem_count = this.state.item_count + 1
+                let newtotal = this.state.total + newItem.price
+                this.setState({
+                    open: true,
+                    item_count: newitem_count,
+                    total: newtotal
+                })
                 this.setState({ message: "Item added to cart!" })
                 this.setState({ state_items_list: newItems });
                 return
             }
         }
-        console.log("else block")
         itemNodeNew.price = newItem.price
         itemNodeNew.name = newItem.item_name
         itemNodeNew.count = 1
         itemNodeNew.id = newItem.id
         itemNodeNew.item_type = newItem.item_type
-        this.state.total = this.state.total + newItem.price
+        let newtotal = this.state.total + newItem.price
         newItems.push(itemNodeNew)
-        this.state.item_count = this.state.item_count + 1
-        this.setState({ state_items_list: newItems });
+        let newitem_count = this.state.item_count + 1
+        this.setState({
+            state_items_list: newItems,
+            total: newtotal,
+            item_count: newitem_count
+        });
         this.setState({ open: true })
         this.setState({ message: "Item added to cart!" })
     }
@@ -295,15 +246,18 @@ class Details extends Component {
             }
         }, this);
         let newItems = newItemList;
-        //newItems.splice(itemIndex, 1);
         let cost = newItem.price / newItem.count
         newItem.price = newItem.price + cost
         newItem.count = newItem.count + 1
-        this.state.total = this.state.total + cost
+        let newtotal = this.state.total + cost
         newItems.splice(itemIndex, 1, newItem);
-        this.state.item_count = this.state.item_count + 1
+        let newitem_count = this.state.item_count + 1
         this.setState({ state_items_list: newItemList });
-        this.setState({ open: true })
+        this.setState({
+            open: true,
+            total: newtotal,
+            item_count: newitem_count
+        })
         this.setState({ message: "Item quantity increased by 1!" })
     }
 
@@ -319,16 +273,20 @@ class Details extends Component {
         let cost = newItem.price / newItem.count
         newItem.price = newItem.price - cost
         newItem.count = newItem.count - 1
-        this.state.total = this.state.total - cost
+        let newtotal = this.state.total - cost
         if (newItem.count !== 0) {
             newItems.splice(itemIndex, 1, newItem);
         }
         else {
             newItems.splice(itemIndex, 1);
         }
-        this.state.item_count = this.state.item_count - 1
+        let newitem_count = this.state.item_count - 1
         this.setState({ state_items_list: newItemList });
-        this.setState({ open: true })
+        this.setState({
+            open: true,
+            total: newtotal,
+            item_count: newitem_count
+        })
         if (newItem.count === 0) {
             this.setState({
                 message: "Item removed from cart!",
@@ -351,8 +309,8 @@ class Details extends Component {
 
     onItemCheckoutClicked = () => {
         this.props.history.push(
-            {pathname: '/checkout', state:{ items_list_new: this.state.state_items_list, total: this.state.total, restaurant_id: this.state.restaurant_id, restaurant_name: this.state.restaurant_name }}
-          )
+            { pathname: '/checkout', state: { items_list_new: this.state.state_items_list, total: this.state.total, restaurant_id: this.state.restaurant_id, restaurant_name: this.state.restaurant_name } }
+        )
     }
 
 

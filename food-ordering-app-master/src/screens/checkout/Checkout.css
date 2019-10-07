@@ -2,12 +2,14 @@
     background-color: #3f51b5;
     color: white;
 }
+
 .gridListAddresses {
     display:flex;
     flex-wrap: wrap;
     justify-content: space-around;
     overflow: hidden;
 }
+
 .gridListNew {
     flex-wrap: nowrap;
     transform: translateZ(0);
@@ -17,22 +19,21 @@
      border:none;
      
 }
+
 .gridTile:hover {
     border:outset;
     border-color:green;
     box-shadow:unset;
 }
-.gridTile.tickIcon:active {
-    border:outset;
-    border-color:rgb(241, 231, 211);
-    box-shadow:unset;
-}
+
 .tickIcon {
     color: none;
 }
+
 .tickIcon:hover {
     color: green;
 }
+
 .tickIcon:active {
     color: green;
 }

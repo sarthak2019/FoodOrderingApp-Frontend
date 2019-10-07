@@ -23,8 +23,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import { StepButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import IconButton from '@material-ui/core/IconButton';
@@ -54,8 +52,13 @@ const useStyles = makeStyles(theme => ({
     },
     gridList: {
         flexWrap: 'nowrap',
-        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
         transform: 'translateZ(0)',
+    },
+    gridListAddresses: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden'
     },
 }));
 
@@ -78,8 +81,6 @@ class Checkout extends Component {
     constructor(props) {
         super(props);
 
-        /*temp check*/
-        //sessionStorage.setItem("authorization", "Bearer eyJraWQiOiJkMWVmZWMwNS0yYzdkLTRhMjMtYjhlNC05NGQ1ZWFmZmI0ZjkiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJkYWY5NDBlMi05NjFmLTRmZWItYTMxYy05Zjk4NDVjZjI2ODgiLCJpc3MiOiJodHRwczovL0Zvb2RPcmRlcmluZ0FwcC5pbyIsImV4cCI6MTU3MDM3MSwiaWF0IjoxNTcwMzQzfQ.61W_BZueQ2OmaQKYYZmnuot-pC2l1hEG1TAMPU5NNvs5xtApm-eTPbeR00LA2YEPOd97rw-nlkfXcP6t6sH0yw");
         if (sessionStorage.getItem('access-token') == null) {
             props.history.replace('/');
         }
@@ -125,17 +126,11 @@ class Checkout extends Component {
         this.getPaymentMethods();
         this.getStatesList();
     }
-    /*
-    componentDidMount() {
-        this.getPaymentMethods();
-        
-    }*/
     tabChangeHandler = (event, value) => {
         this.setState({ value });
     }
 
     statesChangeHandler = event => {
-        console.log("state changed");
         this.setState({ state_uuid: event.target.value });
     }
 
@@ -155,36 +150,32 @@ class Checkout extends Component {
         this.setState({ couponCode: e.target.value });
     }
     addressClickHandler = (addressId) => {
-        console.log("inside addressClickHandler")
-        let styleNew = {border: "outset",
+        let styleNew = {
+            border: "outset",
             borderColor: "red",
-            boxShadow: "unset"}
-            let styleIconnew = {
-                color: "green"
-            }
-        this.setState({ address_id: addressId,
-                    style: styleNew,
-                    styleIcon: styleIconnew });
-        console.log(this.state.address_id)
+            boxShadow: "unset"
+        }
+        let styleIconnew = {
+            color: "green"
+        }
+        this.setState({
+            address_id: addressId,
+            style: styleNew,
+            styleIcon: styleIconnew
+        });
     }
     paymentMethodChangeHandler = (e) => {
-        console.log("inside paymentMethodChangeHandler")
         this.setState({ payment_id: e.target.value });
-        console.log(this.state.payment_id)
     };
 
     handleNext = () => {
-        //const { stepIndex } = this.state;
-        console.log("bEFORE currIndex" + "-- " + this.state.stepIndex);
         if (this.state.address_id !== "" && this.state.address_id !== null) {
-            this.state.stepIndex = this.state.stepIndex + 1;
+            let newstepIndex = this.state.stepIndex + 1;
             this.setState({
-                //stepIndex: this.state.stepIndex + 1,
                 finished: this.state.stepIndex >= 1,
+                stepIndex: newstepIndex
             });
         }
-        console.log("next currIndex-- " + this.state.stepIndex);
-        console.log("Fetch props" + JSON.stringify(this.props));
     };
 
 
@@ -197,11 +188,9 @@ class Checkout extends Component {
 
     handleReset = () => {
         const { stepIndex } = this.state;
-        console.log("in handlerReset" + stepIndex);
         if (stepIndex > 0) {
             this.setState({ stepIndex: 0 });
         }
-        console.log("after handlerReset" + this.state.stepIndex);
 
     };
 
@@ -214,22 +203,16 @@ class Checkout extends Component {
     };
 
     getPaymentMethods = () => {
-
         let that = this;
         let url = `${constants.paymentMethodUrl}`;
-        console.log("In get" + url);
         return fetch(url, {
             method: 'GET',
         }).then((response) => {
-
-            console.log("In then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
-            //console.log("In then2" + jsonResponse);
             that.setState({
                 paymentMethods: jsonResponse.paymentMethods
             });
-            console.log("val" + this.state.paymentMethods);
         }).catch((error) => {
             console.log('error fetching paymentMethods', error);
         });
@@ -238,19 +221,14 @@ class Checkout extends Component {
     getStatesList = () => {
         let that = this;
         let url = `${constants.statesUrl}`;
-        console.log("In state get" + url);
         return fetch(url, {
             method: 'GET',
         }).then((response) => {
-
-            console.log("In state then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
-            //console.log("In then2" + jsonResponse);
             that.setState({
                 statesList: jsonResponse.states
             });
-            console.log("val" + this.state.statesList);
         }).catch((error) => {
             console.log('error fetching States List', error);
         });
@@ -259,18 +237,14 @@ class Checkout extends Component {
     getExistingAddress = () => {
         let that = this;
         let url = `${constants.addressUrl}`;
-        //console.log("In Address get" + url + " token" + sessionStorage.getItem("authorization"));
-        console.log("In Address get" + url + " token" + sessionStorage.getItem("access-token"));
         return fetch(url, {
             method: 'GET',
             headers: {
                 'authorization': 'Bearer ' + sessionStorage.getItem("access-token")
             }
         }).then((response) => {
-            console.log("In address then" + JSON.stringify(response));
             return response.json();
         }).then((jsonResponse) => {
-            console.log("In then2" + jsonResponse.addresses);
             if (jsonResponse.addresses === null) {
                 this.setState({ message: "There are no saved addresses! You can save an address using the 'New Address' tab or using your 'Profile' menu option." })
             }
@@ -280,27 +254,19 @@ class Checkout extends Component {
             that.setState({
                 addressList: jsonResponse.addresses
             });
-            console.log("val" + JSON.stringify(this.state.addressList));
         }).catch((error) => {
             console.log('error fetching addressList', error);
         });
     }
 
     saveAddressClickHandler = () => {
-        console.log("inside saveAddressClickHandler");
         this.state.flatNo === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
         this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
         this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
         this.state.state_uuid === "" ? this.setState({ stateListRequired: "dispBlock" }) : this.setState({ stateListRequired: "dispNone" });
         this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
 
-        console.log("1st check");
-        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { console.log("Exception"); return; }
-        console.log("af 1st check");
-        /*this.props.history.push({
-            pathname: '/confirm/' + this.props.match.params.id,
-            bookingSummary: this.state
-        });*/
+        if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { return; }
 
         var pinValidation = /^\d{6}$/;
 
@@ -325,20 +291,15 @@ class Checkout extends Component {
                 "pincode": this.state.pincode,
                 "state_uuid": this.state.state_uuid
             });
-            console.log("SaveAddress Data" + saveAddressData);
             let xhrSaveAddress = new XMLHttpRequest();
             let that = this;
             xhrSaveAddress.addEventListener("readystatechange", function () {
                 if (this.readyState === 4 && this.status === 201) {
-                    //sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
-                    //sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
                     that.setState({
                         saveAddress: true,
                         snackOpen: true,
-                        snackOpen: true,
                         snackMessage: "Address saved successfully"
                     });
-                    console.log("save success");
                     that.getExistingAddress();
                 }
                 if (this.readyState === 4 && this.status === 400) {
@@ -348,7 +309,6 @@ class Checkout extends Component {
                         snackOpen: true,
                         snackMessage: "Unable to save address"
                     });
-                    console.log("save error" + JSON.parse(this.responseText).message);
                 }
                 if (this.readyState === 4 && (this.status !== 400 && this.status !== 201)) {
                     that.setState({
@@ -357,12 +317,10 @@ class Checkout extends Component {
                         snackOpen: true,
                         snackMessage: "Unable to save address"
                     });
-                    console.log("save error" + JSON.parse(this.responseText).error);
                 }
             });
 
             let url = `${constants.saveAddressUrl}`;
-            console.log("In SaveAddress post" + url);
 
             xhrSaveAddress.open("POST", url);
             xhrSaveAddress.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
@@ -375,11 +333,8 @@ class Checkout extends Component {
 
     applyCouponCodeClickHandler = () => {
         let value = this.state.couponCode;
-        console.log("in CouponCHange" + value);
         if (value !== null || value !== "") {
-            let that = this;
             let url = `${constants.couponUrl}/${value}`;
-            console.log("couponUrl" + url);
             return fetch(url, {
                 method: 'GET',
                 headers: {
@@ -388,26 +343,32 @@ class Checkout extends Component {
             }).then((response) => {
                 return response.json();
             }).then((jsonResponse) => {
-                console.log("coup resp" + JSON.stringify(jsonResponse));
-                if (jsonResponse.coupon_name === null) {
-                    this.setState({ message: "No restaurant with the given name." })
+                if (jsonResponse.percent == null || jsonResponse.percent == "") {
+                    this.setState({
+                        snackMessage: "No coupon with the given name",
+                        snackOpen: true,
+                        newTotal: this.props.location.state.total,
+                        subTotal: this.props.location.state.total,
+                        discount: 0
+                    })
+                    return;
                 }
-                if (jsonResponse.coupon_name !== null) {
-                    this.setState({ message: null })
+                if (jsonResponse.percent !== null || jsonResponse.percent !== "") {
+                    this.setState({
+                        snackMessage: "",
+                        snackOpen: false,
+                        percent: jsonResponse.percent,
+                        coupon_id: jsonResponse.id
+                    })
+                    let newsubTotal = this.props.location.state.total;
+                    let newDiscount = (this.state.newTotal * this.state.percent) / 100;
+                    let newTotalval = this.state.newTotal - newDiscount;
+                    this.setState({
+                        subTotal: newsubTotal,
+                        discount: newDiscount,
+                        newTotal: newTotalval
+                    })
                 }
-                this.setState({
-                    percent: jsonResponse.percent,
-                    coupon_id: jsonResponse.id,
-                });
-                let newsubTotal = this.props.location.state.total;
-                let newDiscount = (this.state.newTotal * this.state.percent) / 100;
-                let newTotalval = this.state.newTotal - newDiscount;
-                this.setState({
-                    subTotal: newsubTotal,
-                    discount: newDiscount,
-                    newTotal: newTotalval
-                })
-                console.log("subTotal" + this.state.subTotal + "discount" + this.state.discount + "newTotal" + this.state.newTotal);
 
             }).catch((error) => {
                 console.log('error coupon data', error);
@@ -416,14 +377,6 @@ class Checkout extends Component {
     }
 
     onPlaceOrderClickHandler = () => {
-        console.log("inside onPlaceOrderClickHandler");
-
-        console.log("1st check");
-        console.log("af 1st check");
-        /*this.props.history.push({
-            pathname: '/confirm/' + this.props.match.params.id,
-            bookingSummary: this.state
-        });*/
 
         let item_quantities = []
         if (this.props.location.state.items_list_new.length > 0) {
@@ -445,19 +398,15 @@ class Checkout extends Component {
             "payment_id": this.state.payment_id,
             "restaurant_id": this.props.location.state.restaurant_id
         });
-        console.log("saveOrderData" + saveOrderData);
         let xhrSaveOrder = new XMLHttpRequest();
         let that = this;
         xhrSaveOrder.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 201) {
-                //sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
-                //sessionStorage.setItem("access-token", xhrSaveAddress.getResponseHeader("access-token"));
                 that.setState({
                     saveOrder: true,
                     snackOpen: true,
                     snackMessage: "Order placed successfully! Your order ID is " + JSON.parse(this.responseText).id
                 });
-                console.log("saveOrder success");
             }
             if (this.readyState === 4 && this.status === 400) {
                 that.setState({
@@ -466,7 +415,6 @@ class Checkout extends Component {
                     snackOpen: true,
                     snackMessage: "Unable to place your order! Please try again!"
                 });
-                console.log("save error" + JSON.parse(this.responseText).message);
             }
             if (this.readyState === 4 && (this.status !== 400 && this.status !== 201)) {
                 that.setState({
@@ -475,15 +423,12 @@ class Checkout extends Component {
                     snackOpen: true,
                     snackMessage: "Unable to place your order! Please try again!"
                 });
-                console.log("save error" + JSON.parse(this.responseText).error);
             }
         });
 
         let url = `${constants.orderUrl}`;
-        console.log("In xhrSaveOrder post" + url);
 
         xhrSaveOrder.open("POST", url);
-        //xhrSaveAddress.setRequestHeader("authorization", sessionStorage.getItem("authorization"));
         xhrSaveOrder.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"));
         xhrSaveOrder.setRequestHeader("Content-Type", "application/json");
         xhrSaveOrder.setRequestHeader("Cache-Control", "no-cache");
@@ -492,8 +437,6 @@ class Checkout extends Component {
     }
 
     renderStepActions(step) {
-        const { stepIndex } = this.state;
-        const steps = 2;
         return (
             <div style={{ margin: '12px 0' }}>
                 <Button
@@ -520,11 +463,6 @@ class Checkout extends Component {
     render() {
         const { stepIndex, finished } = this.state;
         const { state_items_list } = this.props.location.state.items_list_new;
-        console.log("props state_items_list" + state_items_list);
-        console.log("part3 page props" + JSON.stringify(this.props.location.state.items_list_new));
-        console.log(JSON.stringify(this.props.location.state.total));
-        console.log("const" + { stepIndex });
-        const steps = 2;
 
         return (
             <div>
@@ -547,8 +485,8 @@ class Checkout extends Component {
                                     {this.state.value === 0 &&
                                         <TabContainer>
                                             <br />
-                                            <div className="gridListAddresses">
-                                                <GridList cols={3} className="gridListNew">
+                                            <div className={classes.gridListAddresses}>
+                                                <GridList cols={3} className={classes.gridList}>
                                                     {this.state.addressList != null && this.state.addressList.map(address => (
                                                         <GridListTile
                                                             style={this.state.style}
@@ -632,27 +570,6 @@ class Checkout extends Component {
                                             <Button variant="contained" color="secondary" onClick={this.saveAddressClickHandler}>SAVE ADDRESS</Button>
                                         </TabContainer>
                                     }
-                                    <div className={classes.actionsContainer}>
-                                        <div>
-                                            {/* <Button
-                                    disabled={this.state.stepIndex === 0}
-                                    onClick={handleBack}
-                                    className={classes.button}
-                                >
-                                    Back
-                  </Button>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={this.handleNext}
-                                    className={classes.button}
-                                >
-                                    {this.state.stepIndex === steps - 1 ? 'Finish' : 'Next'}
-                                </Button> */}
-
-
-                                        </div>
-                                    </div>
                                     {this.renderStepActions(0)}
                                 </StepContent>
 
