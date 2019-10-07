@@ -49,6 +49,7 @@ const useStyles = makeStyles(theme => ({
     },
     resetContainer: {
         padding: theme.spacing(3),
+        paddingLeft: '25px',
     },
     gridList: {
         flexWrap: 'nowrap',
@@ -628,7 +629,7 @@ class Checkout extends Component {
                         </Stepper>
                         {finished && (
 
-                            <Paper square elevation={0} className={classes.resetContainer}>
+                            <Paper square elevation={0} className="resetContainer">
                                 <Typography><b> View the summary & place your order now!</b></Typography>
                                 <Button onClick={this.handleReset} className={classes.button}>
                                     CHANGE
