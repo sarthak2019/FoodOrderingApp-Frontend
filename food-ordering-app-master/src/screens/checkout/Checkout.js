@@ -524,11 +524,11 @@ class Checkout extends Component {
                                         <TabContainer>
                                             <br />
                                             <div className="gridListAddresses">
-                                                <GridList cols={2.5} className="gridListNew">
+                                            <GridList cols={3} className="gridListNew" spacing={10}>
                                                     {this.state.addressList != null && this.state.addressList.map(address => (
                                                         <GridListTile
                                                             style={this.state.style}
-                                                            key={address.id}>
+                                                            key={address.id}  >
                                                             <div>{address.flat_building_name}</div>
                                                             <div>{address.locality}</div>
                                                             <div>{address.city}</div>

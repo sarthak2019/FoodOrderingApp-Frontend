@@ -4,19 +4,19 @@
 }
 .gridListAddresses {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: space-around;
-    flex-grow: 1;
-    overflowX: 'auto';
+    overflow: hidden;
+    
+    width:100%;
 }
 .gridListNew {
-    flex-wrap: nowrap;
-    transform: translateZ(0);
-    text-align: justify;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
     padding: 5px;
-    overflow: scroll;
-    height: 750px;
-    width: 650px;
+    overflow-x: scroll;
+    width: 190%;
 }
 
 .gridTile {
