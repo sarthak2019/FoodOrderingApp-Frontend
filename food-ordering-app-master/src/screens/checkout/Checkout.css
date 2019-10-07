@@ -3,14 +3,20 @@
     color: white;
 }
 .gridListAddresses {
-    display:flex;
-    flex-wrap: wrap;
+    display: flex;
+    flex-wrap: nowrap;
     justify-content: space-around;
-    overflow: hidden;
+    flex-grow: 1;
+    overflowX: 'auto';
 }
 .gridListNew {
     flex-wrap: nowrap;
     transform: translateZ(0);
+    text-align: justify;
+    padding: 5px;
+    overflow: scroll;
+    height: 750px;
+    width: 650px;
 }
 
 .gridTile {

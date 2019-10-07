@@ -286,7 +286,7 @@ class Checkout extends Component {
         console.log("1st check");
         if ((this.state.flatNo === "") || (this.state.locality === "") || (this.state.city === "") || (this.state.state_uuid === "") || (this.state.pincode === "")) { console.log("Exception"); return; }
         console.log("af 1st check");
- 
+
         var pinValidation = /^\d{6}$/;
 
         if (pinValidation.test(String(this.state.pincode)) === false) {
@@ -403,7 +403,7 @@ class Checkout extends Component {
 
         console.log("1st check");
         console.log("af 1st check");
-        
+
         let item_quantities = []
         if (this.props.location.state.items_list_new.length > 0) {
             this.props.location.state.items_list_new.forEach(function (item, index) {
@@ -524,7 +524,7 @@ class Checkout extends Component {
                                         <TabContainer>
                                             <br />
                                             <div className="gridListAddresses">
-                                                <GridList cols={3} className="gridListNew">
+                                                <GridList cols={2.5} className="gridListNew">
                                                     {this.state.addressList != null && this.state.addressList.map(address => (
                                                         <GridListTile
                                                             style={this.state.style}
@@ -632,12 +632,14 @@ class Checkout extends Component {
                             </Step>
                         </Stepper>
                         {finished && (
-                            <Paper square elevation={0} className={classes.resetContainer}>
-                                <Typography><b> View the summary & place your order now!</b></Typography>
-                                <Button onClick={this.handleReset} className={classes.button}>
-                                    CHANGE
+                            
+                                <Paper square elevation={0} className={classes.resetContainer}>
+                                    <Typography><b> View the summary & place your order now!</b></Typography>
+                                    <Button onClick={this.handleReset} className={classes.button}>
+                                        CHANGE
           </Button>
-                            </Paper>
+                                </Paper>
+                            
 
                         )
                         }
