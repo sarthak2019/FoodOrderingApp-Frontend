@@ -508,7 +508,7 @@ class Checkout extends Component {
                     screen={"Checkout"}
                     history={this.props.history} />
                 <div className="main-div">
-                    <div style={{ width: '60%' }}>
+                    <div style={{ width: '69%' }}>
                         <Stepper activeStep={this.state.stepIndex} orientation="vertical">
                             <Step>
                                 <StepLabel>Delivery</StepLabel>
@@ -642,7 +642,7 @@ class Checkout extends Component {
                         )
                         }
                     </div>
-                    <div style={{ width: '40%' }}>
+                    <div style={{ width: '30%', marginLeft: '5px' }}>
                         <Card className="cardStyle">
                             <CardContent>
                                 <div style={{ marginBottom: '10px' }}><b>Summary</b></div>
