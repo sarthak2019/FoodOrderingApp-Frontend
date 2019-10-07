@@ -96,11 +96,13 @@ class Details extends Component {
                             ))}
                         </div>
                         <br />
-                        <div className="restaurant-details"><div className="restaurant-details"><span><StarIcon></StarIcon>&nbsp;&nbsp;{this.state.restaurant_customer_rating}</span><span><b>&#x20b9;</b>{this.state.restaurant_number_customers_rated}</span></div>
-                            <div style={{ align: "left" }}>AVERGAE RATING BY {this.state.restaurant_number_customers_rated} CUSTOMERS</div>
+                        <div className="restaurant-details">
+                            <span><div><StarIcon></StarIcon>&nbsp;&nbsp;{this.state.restaurant_customer_rating}</div>
+                            <div>AVERGAE RATING BY {this.state.restaurant_number_customers_rated} CUSTOMERS</div></span>
+                                <span><div><b>&#x20b9;</b>{this.state.restaurant_number_customers_rated}</div>
+                                <div>AVERAGE COST FOR TWO PEOPLE</div></span></div>
 
-                            <div style={{ align: "right" }}>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AVERAGE COST FOR TWO PEOPLE</div></div>
+                            
                         
                     </div>
                 </div>

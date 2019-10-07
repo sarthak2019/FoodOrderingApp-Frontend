@@ -34,7 +34,7 @@ class Home extends Component {
                     {(this.state.allrestaurantsData !== null) && (this.state.allrestaurantsData !== undefined) ?
                         (this.state.allrestaurantsData.map(restaurant => (
 
-                            <Card key={restaurant.id} style={{ align: 'left', width: "25%", cursor: "pointer" }} onClick={() => this.restaurantClickHandler(restaurant.id)}>
+                            <Card key={restaurant.id} style={{ align: 'left', width: "24%", cursor: "pointer", margin: "5px" }} onClick={() => this.restaurantClickHandler(restaurant.id)}>
                                 <CardContent>
                                     <div>
                                         <img
