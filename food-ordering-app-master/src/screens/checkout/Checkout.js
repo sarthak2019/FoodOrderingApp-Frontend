@@ -234,8 +234,6 @@ class Checkout extends Component {
         if (stepIndex > 0) {
             this.setState({ stepIndex: 0 });
         }
-
-        this.addressClickHandler(this.state.address_id, this.state.index);
     };
 
     /* The below method is used to close the SnackBar. */
