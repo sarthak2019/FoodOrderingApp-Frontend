@@ -82,6 +82,7 @@ class Checkout extends Component {
         super(props);
 
         this.myRef = [];
+        this.myRefNew = [];
 
         if (sessionStorage.getItem('access-token') == null) {
             props.history.replace('/');
@@ -185,11 +186,17 @@ class Checkout extends Component {
                 this.myRef[index].current.style.borderColor = "";
                 this.myRef[index].current.style.boxShadow = "";
             }
+            if (this.myRefNew[index].current != null) {
+                this.myRefNew[index].current.style.color = "";
+            }
         })
         if (this.myRef[indexNew].current != null) {
             this.myRef[indexNew].current.style.border = "outset";
             this.myRef[indexNew].current.style.borderColor = "red";
             this.myRef[indexNew].current.style.boxShadow = "unset";
+        }
+        if (this.myRefNew[indexNew].current != null) {
+            this.myRefNew[indexNew].current.style.color = "green";
         }
         this.setState({
             address_id: addressId,
@@ -532,6 +539,7 @@ class Checkout extends Component {
                                                 <GridList cols={3} className={classes.gridList}>
                                                     {this.state.addressList != null && this.state.addressList.map((address, index) => (
                                                         this.myRef[index] = React.createRef(),
+                                                        this.myRefNew[index] = React.createRef(),
                                                         <GridListTile
                                                             style={this.state.style}
                                                             key={address.id} ref={this.myRef[index]}>
@@ -540,7 +548,7 @@ class Checkout extends Component {
                                                             <div>{address.city}</div>
                                                             <div>{address.state.state_name}</div>
                                                             <div>{address.pincode}</div>
-                                                            <IconButton style={this.state.styleIcon}>
+                                                            <IconButton style={this.state.styleIcon} ref={this.myRefNew[index]}>
                                                                 <CheckCircleIcon className="tickIcon" onClick={() => this.addressClickHandler(address.id, index)} />
                                                             </IconButton>
                                                         </GridListTile>
